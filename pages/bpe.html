@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="BPE 子词切分实验室｜NLP 百宝箱"><title>BPE 子词切分｜NLP 百宝箱</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2310141c'/%3E%3Cpath d='M17 15h30v34H17z' fill='none' stroke='%236e8ef7' stroke-width='3'/%3E%3Cpath d='M24 25h16M24 33h16M24 41h9' stroke='%23f7f7f7' stroke-width='3'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../assets/css/main.css"><link rel="stylesheet" href="../assets/css/responsive.css"><link rel="stylesheet" href="../assets/css/experiment.css"><link rel="stylesheet" href="../assets/css/extensions.css"><link rel="stylesheet" href="../assets/css/bpe.css">
+</head>
+<body class="module-page">
+  <a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header"><a class="brand" href="../index.html" aria-label="NLP 百宝箱首页"><span class="brand__en">NLP TOOLBOX</span><span class="brand__cn">NLP 百宝箱</span></a></header>
+  <nav class="primary-nav" aria-label="主导航"><div class="nav-wrap"><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-menu"><span>菜单</span><span class="nav-toggle__icon" aria-hidden="true"></span></button><ul id="primary-menu" class="nav-list"><li><a href="../index.html">首页</a></li><li><a href="../index.html#foundations">入门夯实</a></li><li><a href="../index.html#simulation">中阶原理仿真</a></li><li><a href="../index.html#engineering">高阶工程虚仿</a></li><li><a class="is-active" href="../index.html#extensions">拓展探索</a></li><li><a href="../index.html#about">关于项目</a></li></ul></div></nav>
+  <main id="main-content" class="experiment-main">
+    <header class="module-intro"><span class="module-number">10</span><p class="kicker">TOKENIZER LAB</p><h1>BPE 子词切分实验室</h1><p>观察 BPE 如何统计符号对频率、执行合并并逐步构建子词词表，理解现代 NLP 模型为什么通常不直接采用单纯的词级分词。</p></header>
+    <section class="experiment-block"><h2>实验概览</h2><div class="extension-overview"><p class="tool-label">BPE 可视化</p><h3>从字符到可复用子词</h3><p>从本地小语料的词频出发，逐步统计相邻符号对、执行合并、记录规则，再把同一套规则应用于新词。</p><div class="extension-pipeline" style="--steps:5"><span>01 语料</span><span>02 词对计数</span><span>03 合并</span><span>04 词表</span><span>05 切分</span></div></div></section>
+    <section class="experiment-block"><h2>实验区域</h2><div class="experiment-shell experiment-shell--tool" data-experiment="bpe"></div></section>
+    <section class="experiment-block module-knowledge"><section><h3>学习目标</h3><p>理解 BPE 如何按频率合并字符符号对，并通过有序合并规则表示未知或低频词。</p></section><section><h3>核心知识</h3><ul class="extension-concepts"><li>字节对编码</li><li>子词</li><li>词表</li><li>词对频率</li><li>合并规则</li><li>OOV</li></ul></section><section><h3>实验说明</h3><p>本页为字符级教学版 BPE：实际执行本地词对计数、频率加权与合并，不完整复现 GPT 常用的字节级 BPE。</p></section></section>
+    <section class="related-modules" aria-label="相关模块"><p class="tool-label">RELATED MODULES</p><p><a href="preprocessing.html">02 文本预处理 →</a><a href="transformer.html">08 Transformer →</a></p></section>
+    <nav class="module-links" aria-label="模块导航"><a href="llm-sampling.html">← 09 LLM Sampling</a><a href="retrieval.html">11 信息检索与 RAG →</a></nav>
+    <a class="back-link" href="../index.html#extensions"><span aria-hidden="true">←</span>返回模块列表</a>
+  </main>
+  <footer class="site-footer"><div><p class="kicker kicker--light">NLP TOOLBOX</p><h2>NLP 百宝箱</h2><p>Natural Language Processing Interactive Toolbox</p></div><div class="footer-meta"><p><span>课程</span>自然语言处理</p><p><span>技术栈</span>HTML / CSS / JavaScript</p></div><div class="attribution">Design adapted from <a href="https://html5up.net/massively">Massively by HTML5 UP</a>.</div></footer>
+  <script src="../assets/js/main.js"></script><script src="../assets/js/data/bpe-data.js"></script><script src="../assets/js/modules/bpe-algorithms.js"></script><script src="../assets/js/modules/bpe.js"></script>
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="NLP 百宝箱：自然语言处理课程的交互式学习与实验平台。">
+    <title>NLP 百宝箱｜自然语言处理交互学习平台</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2310141c'/%3E%3Cpath d='M17 15h30v34H17z' fill='none' stroke='%236e8ef7' stroke-width='3'/%3E%3Cpath d='M24 25h16M24 33h16M24 41h9' stroke='%23f7f7f7' stroke-width='3'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">跳至主要内容</a>
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="hero__grid" aria-hidden="true"></div>
+      <div class="hero__content">
+        <p class="kicker kicker--light">NATURAL LANGUAGE PROCESSING</p>
+        <h1 id="hero-title">NLP 百宝箱</h1>
+        <p class="hero__statement">让语言的原理，<br>变得看得见。</p>
+        <p class="hero__description">从概念辨析到模型仿真，在可观察、可修改、可验证的实验中理解自然语言处理。</p>
+        <a class="button button--light" href="#learning-path">开始探索 <span aria-hidden="true">→</span></a>
+      </div>
+      <a class="scroll-cue" href="#brand" aria-label="滚动至品牌区域">
+        <span>SCROLL TO EXPLORE</span><i aria-hidden="true"></i>
+      </a>
+    </section>
+
+    <header class="site-header" id="brand">
+      <a class="brand" href="#top" aria-label="NLP 百宝箱首页">
+        <span class="brand__en">NLP TOOLBOX</span>
+        <span class="brand__cn">NLP 百宝箱</span>
+      </a>
+    </header>
+
+    <nav class="primary-nav" aria-label="主导航">
+      <div class="nav-wrap">
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-menu">
+          <span>菜单</span><span class="nav-toggle__icon" aria-hidden="true"></span>
+        </button>
+        <ul id="primary-menu" class="nav-list">
+          <li><a class="is-active" href="#top">首页</a></li>
+          <li><a href="#foundations">入门夯实</a></li>
+          <li><a href="#simulation">中阶原理仿真</a></li>
+          <li><a href="#engineering">高阶工程虚仿</a></li>
+          <li><a href="#extensions">拓展探索</a></li>
+          <li><a href="#decision-intelligence">决策智能</a></li>
+          <li><a href="#about">关于项目</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <main id="main-content" class="main-shell">
+      <section class="featured" id="learning-path" aria-labelledby="path-title">
+        <header class="section-heading section-heading--center">
+          <p class="kicker">LEARNING PATH</p>
+          <h2 id="path-title">从概念理解<br>到模型工程</h2>
+          <p>课程主体按三个阶段组织：先建立语言处理的共同基础，再观察模型内部过程，最后进入工程化的模型行为实验；随后可进入拓展探索与决策智能。</p>
+        </header>
+        <ol class="learning-path">
+          <li>
+            <span class="path-number">01</span>
+            <p class="kicker">UNDERSTAND</p>
+            <h3>入门夯实</h3>
+            <p>建立概念、预处理与评测基础。</p>
+          </li>
+          <li>
+            <span class="path-number">02</span>
+            <p class="kicker">SIMULATE</p>
+            <h3>原理仿真</h3>
+            <p>观察模型内部计算过程。</p>
+          </li>
+          <li>
+            <span class="path-number">03</span>
+            <p class="kicker">ENGINEER</p>
+            <h3>工程虚仿</h3>
+            <p>理解 Transformer 与生成模型行为。</p>
+          </li>
+          <li>
+            <span class="path-number">04</span>
+            <p class="kicker">EXPLORE · OPTIONAL EXTENSION</p>
+            <h3>拓展探索</h3>
+            <p>探索 Tokenizer、Retrieval 与 Decoding 等现代 NLP 工程机制。</p>
+          </li>
+          <li>
+            <span class="path-number">05</span>
+            <p class="kicker">DECIDE</p>
+            <h3>决策智能</h3>
+            <p>从生成结果走向结构化判断。</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="module-section" id="foundations" aria-labelledby="foundations-title">
+        <header class="section-heading">
+          <p class="kicker">01 / FOUNDATIONS</p>
+          <h2 id="foundations-title">入门夯实</h2>
+          <p>从术语、文本结构到评价指标，建立后续模型实验所需的共同语言。</p>
+        </header>
+        <div class="module-grid module-grid--foundations">
+          <article class="module-card">
+            <span class="module-number">01</span><p class="kicker">FOUNDATIONS</p><h3>术语闯关</h3>
+            <p>通过概念匹配和错误反馈建立 NLP 基础术语体系。</p><a href="pages/terminology.html">进入模块 <span aria-hidden="true">→</span></a>
+          </article>
+          <article class="module-card">
+            <span class="module-number">02</span><p class="kicker">PREPROCESSING LAB</p><h3>文本预处理</h3>
+            <p>拆解文本进入模型前的清洗、切分与规范化流程。</p><a href="pages/preprocessing.html">进入模块 <span aria-hidden="true">→</span></a>
+          </article>
+          <article class="module-card">
+            <span class="module-number">03</span><p class="kicker">METRICS LAB</p><h3>指标计算器</h3>
+            <p>理解分类与生成任务中常用评估指标的含义。</p><a href="pages/metrics.html">进入模块 <span aria-hidden="true">→</span></a>
+          </article>
+          <article class="module-card">
+            <span class="module-number">04</span><p class="kicker">KNOWLEDGE CHECK</p><h3>分层自测</h3>
+            <p>以层级化的知识检查梳理自己的学习进度。</p><a href="pages/quiz.html">进入模块 <span aria-hidden="true">→</span></a>
+          </article>
+        </div>
+      </section>
+
+      <section class="module-section module-section--tinted" id="simulation" aria-labelledby="simulation-title">
+        <header class="section-heading">
+          <p class="kicker">02 / SIMULATION</p>
+          <h2 id="simulation-title">中阶原理仿真</h2>
+          <p>以可观察的静态界面预留模型内部结构、参数与过程的实验位置。</p>
+        </header>
+        <div class="module-grid module-grid--simulation">
+          <article class="module-card module-card--diagram">
+            <span class="module-number">05</span><p class="kicker">TEXT CNN LAB</p><h3>Text-CNN</h3>
+            <div class="card-diagram diagram-cnn" aria-hidden="true"><i></i><i></i><i></i><b></b></div>
+            <p>预留卷积窗口、特征图与池化结果的观察区域。</p><a href="pages/text-cnn.html">进入模块 <span aria-hidden="true">→</span></a>
+          </article>
+          <article class="module-card module-card--diagram">
+            <span class="module-number">06</span><p class="kicker">ATTENTION LAB</p><h3>Attention</h3>
+            <div class="card-diagram diagram-attention" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <p>预留注意力分布与词元关联的可视化区域。</p><a href="pages/attention.html">进入模块 <span aria-hidden="true">→</span></a>
+          </article>
+          <article class="module-card module-card--diagram">
+            <span class="module-number">07</span><p class="kicker">OPTIMIZATION LAB</p><h3>Loss 实验室</h3>
+            <div class="card-diagram diagram-loss" aria-hidden="true"><svg viewBox="0 0 200 64" role="presentation"><path d="M4 8C39 10 41 53 74 43s21-37 52-26 23 25 70 42" fill="none"/></svg></div>
+            <p>预留损失曲线、优化过程和参数对比的实验区。</p><a href="pages/loss.html">进入模块 <span aria-hidden="true">→</span></a>
+          </article>
+        </div>
+      </section>
+
+      <section class="module-section" id="engineering" aria-labelledby="engineering-title">
+        <header class="section-heading">
+          <p class="kicker">03 / ENGINEERING</p>
+          <h2 id="engineering-title">高阶工程虚仿</h2>
+          <p>面向现代语言模型的关键结构与生成决策，建立更完整的工程视角。</p>
+        </header>
+        <div class="module-grid module-grid--engineering">
+          <article class="module-card module-card--feature">
+            <span class="module-number">08</span><p class="kicker">TRANSFORMER LAB</p><h3>Transformer</h3>
+            <div class="feature-diagram transformer-diagram" aria-hidden="true"><span>INPUT</span><i></i><span>ATTN</span><i></i><span>FFN</span><i></i><span>OUTPUT</span></div>
+            <p>从词元表示到注意力层，预留 Transformer Block 的结构化实验工作台。</p><a href="pages/transformer.html">进入模块 <span aria-hidden="true">→</span></a>
+          </article>
+          <article class="module-card module-card--feature">
+            <span class="module-number">09</span><p class="kicker">GENERATION LAB</p><h3>LLM Sampling</h3>
+            <div class="feature-diagram sampling-diagram" aria-hidden="true"><i style="--h:35%"></i><i style="--h:78%"></i><i style="--h:53%"></i><i style="--h:90%"></i><i style="--h:27%"></i><i style="--h:62%"></i></div>
+            <p>预留词元分布、采样策略和生成路径的交互实验区域。</p><a href="pages/llm-sampling.html">进入模块 <span aria-hidden="true">→</span></a>
+          </article>
+        </div>
+      </section>
+
+      <section class="module-section module-section--tinted" id="extensions" aria-labelledby="extensions-title">
+        <header class="section-heading">
+          <p class="kicker">04 / EXTENSIONS · BEYOND THE COURSE</p>
+          <h2 id="extensions-title">拓展探索</h2>
+          <p>从 Tokenizer、Retrieval 到 Decoding，探索现代 NLP 与大模型工程中课程主体之外的重要机制。</p>
+        </header>
+        <div class="module-grid module-grid--extensions">
+          <article class="module-card module-card--diagram">
+            <span class="module-number">10</span><p class="kicker">TOKENIZER LAB · EXTENSION</p><h3>BPE 子词切分实验室</h3>
+            <div class="card-diagram diagram-bpe" aria-hidden="true"><span>b + e</span><i>↓</i><strong>be</strong></div>
+            <p>逐步观察高频符号对合并、词表构建与未知词切分过程，理解子词 Tokenization。</p><a href="pages/bpe.html">进入实验 <span aria-hidden="true">→</span></a>
+          </article>
+          <article class="module-card module-card--diagram">
+            <span class="module-number">11</span><p class="kicker">RETRIEVAL LAB · EXTENSION</p><h3>信息检索与 RAG 实验室</h3>
+            <div class="card-diagram diagram-retrieval" aria-hidden="true"><span>QUERY</span><i>↓</i><b>CHUNK A&nbsp; 0.91</b><b>CHUNK B&nbsp; 0.74</b></div>
+            <p>从 Document Chunk 到 Context Assembly，理解检索增强生成的核心数据流。</p><a href="pages/retrieval.html">进入实验 <span aria-hidden="true">→</span></a>
+          </article>
+          <article class="module-card module-card--diagram">
+            <span class="module-number">12</span><p class="kicker">DECODING LAB · EXTENSION</p><h3>Beam Search 解码实验室</h3>
+            <div class="card-diagram diagram-beam" aria-hidden="true"><span>START</span><i>├─ A ─ C</i><i>└─ B ─ E</i></div>
+            <p>观察候选序列扩展、累计得分与剪枝，理解 Beam Search 的解码思路。</p><a href="pages/beam-search.html">进入实验 <span aria-hidden="true">→</span></a>
+          </article>
+        </div>
+        <div class="extensions-chain" aria-label="拓展模块知识关系"><p class="kicker">MODERN NLP EXTENSIONS</p><p><strong>10 TOKENIZE</strong><span>文本表示</span><b aria-hidden="true">→</b><strong>11 RETRIEVE</strong><span>知识获取</span><b aria-hidden="true">→</b><strong>12 DECODE</strong><span>生成决策</span></p></div>
+      </section>
+
+      <section class="module-section" id="decision-intelligence" aria-labelledby="decision-intelligence-title">
+        <header class="section-heading">
+          <p class="kicker">05 / DECISION INTELLIGENCE</p>
+          <h2 id="decision-intelligence-title">决策智能</h2>
+          <p>从开放文本生成走向结构化判断，探索 Choice、Score、Confidence 与 Decision Workflow。</p>
+        </header>
+        <div class="module-grid module-grid--decision">
+          <article class="module-card module-card--decision">
+            <span class="module-number">13</span><p class="kicker">SYSTEM ONE LAB</p><h3>Jev · AI Decision Lab</h3>
+            <div class="decision-card-content">
+              <div>
+                <p>从“生成文本”进一步走向“结构化决策”，理解 Choice、Score、Noul、Confidence 与 Decision Workflow。</p>
+                <ul class="decision-capabilities" aria-label="模块核心能力"><li>Choice / Score / Noul</li><li>Confidence</li><li>Decision Workflow</li></ul>
+              </div>
+              <div class="decision-diagram" aria-hidden="true">
+                <span class="decision-diagram__state">STATE</span><i>↓</i>
+                <div class="decision-diagram__types"><b>CHOICE</b><b>SCORE</b><b>NOUL</b></div><i>↓</i>
+                <span class="decision-diagram__result">DECISION</span><small>Critical · 0.91 · Human Review</small>
+              </div>
+            </div>
+            <a href="pages/jev-decision.html">进入实验 <span aria-hidden="true">→</span></a>
+          </article>
+        </div>
+      </section>
+
+      <section class="about-section" id="about" aria-labelledby="about-title">
+        <div>
+          <p class="kicker">ABOUT THE PROJECT</p><h2 id="about-title">关于 NLP 百宝箱</h2>
+        </div>
+        <div class="about-section__content">
+          <p>这是一个基于 HTML、CSS 与 JavaScript 构建的自然语言处理交互式学习平台。它将通过可视化和实验，帮助学习者理解 NLP 基础概念、深度学习模型，以及 Transformer / LLM 的关键机制。</p>
+          <ul class="technology-list" aria-label="项目关键词"><li>HTML5</li><li>CSS3</li><li>JAVASCRIPT</li><li>BROWSER LOCAL</li><li>NLP EDUCATION</li><li>INTERACTIVE SIMULATION</li></ul>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div><p class="kicker kicker--light">NLP TOOLBOX</p><h2>NLP 百宝箱</h2><p>Natural Language Processing Interactive Toolbox</p></div>
+      <div class="footer-meta"><p><span>课程</span>自然语言处理</p><p><span>技术栈</span>HTML / CSS / JavaScript</p><p><span>运行方式</span>Browser Local</p></div>
+      <div class="attribution">Design adapted from <a href="https://html5up.net/massively" target="_blank" rel="noopener noreferrer">Massively by HTML5 UP</a>.<br>Licensed under <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener noreferrer">CC BY 3.0</a>.</div>
+    </footer>
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>

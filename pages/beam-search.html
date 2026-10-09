@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Beam Search 解码实验室｜NLP 百宝箱"><title>Beam Search 解码｜NLP 百宝箱</title>
+  <link rel="stylesheet" href="../assets/css/main.css"><link rel="stylesheet" href="../assets/css/responsive.css"><link rel="stylesheet" href="../assets/css/experiment.css"><link rel="stylesheet" href="../assets/css/extensions.css"><link rel="stylesheet" href="../assets/css/beam-search.css">
+</head>
+<body class="module-page">
+  <a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header"><a class="brand" href="../index.html" aria-label="NLP 百宝箱首页"><span class="brand__en">NLP TOOLBOX</span><span class="brand__cn">NLP 百宝箱</span></a></header>
+  <nav class="primary-nav" aria-label="主导航"><div class="nav-wrap"><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-menu"><span>菜单</span><span class="nav-toggle__icon" aria-hidden="true"></span></button><ul id="primary-menu" class="nav-list"><li><a href="../index.html">首页</a></li><li><a href="../index.html#foundations">入门夯实</a></li><li><a href="../index.html#simulation">中阶原理仿真</a></li><li><a href="../index.html#engineering">高阶工程虚仿</a></li><li><a class="is-active" href="../index.html#extensions">拓展探索</a></li><li><a href="../index.html#about">关于项目</a></li></ul></div></nav>
+  <main id="main-content" class="experiment-main">
+    <header class="module-intro"><span class="module-number">12</span><p class="kicker">DECODING LAB</p><h1>Beam Search 解码实验室</h1><p>通过候选序列扩展、累计对数分数、全局排名与剪枝，逐步观察 Beam Search 如何从多条生成路径中寻找高分序列。</p></header>
+    <section class="experiment-block"><h2>实验概览</h2><div class="extension-overview"><p class="tool-label">束搜索可视化</p><h3>从候选扩展到序列决策</h3><p>每轮都会真实计算下一词元概率、累积对数概率、长度惩罚与全局剪枝；搜索树保留被剪枝路径，便于回溯每次决策。</p><div class="extension-pipeline" style="--steps:7"><span>01 初始候选束</span><span>02 展开</span><span>03 打分</span><span>04 排名</span><span>05 剪枝</span><span>06 下一步</span><span>07 最终假设</span></div></div></section>
+    <section class="experiment-block"><h2>实验区域</h2><div class="experiment-shell experiment-shell--tool" data-experiment="beam-search"></div></section>
+    <section class="experiment-block module-knowledge"><section><h3>学习目标</h3><p>理解自回归生成中候选序列如何被扩展、打分、全局排序、剪枝，并以 EOS 或最大长度结束。</p></section><section><h3>核心知识</h3><ul class="extension-concepts"><li>解码</li><li>候选束宽度</li><li>对数概率</li><li>全局剪枝</li><li>EOS</li><li>长度惩罚</li><li>N-best</li></ul></section><section><h3>实验说明</h3><p>本实验真实执行束搜索，但使用小型词表和确定性的教学 Logits 生成器，而非真实预训练语言模型。束搜索是有限宽度搜索，不保证穷举意义上的全局最优；较高搜索分数也不等同于更高文本质量。</p></section></section>
+    <section class="related-modules" aria-label="相关模块"><p class="tool-label">相关模块</p><p><a href="llm-sampling.html">09 LLM Sampling →</a></p></section>
+    <nav class="module-links" aria-label="模块导航"><a href="retrieval.html">← 11 信息检索与 RAG</a></nav>
+    <a class="back-link" href="../index.html#extensions"><span aria-hidden="true">←</span>返回模块列表</a>
+  </main>
+  <footer class="site-footer"><div><p class="kicker kicker--light">NLP TOOLBOX</p><h2>NLP 百宝箱</h2><p>Natural Language Processing Interactive Toolbox</p></div><div class="footer-meta"><p><span>课程</span>自然语言处理</p><p><span>技术栈</span>HTML / CSS / JavaScript</p></div><div class="attribution">Design adapted from <a href="https://html5up.net/massively">Massively by HTML5 UP</a>.</div></footer>
+  <script src="../assets/js/main.js"></script>
+  <script src="../assets/js/data/sampling-data.js"></script>
+  <script src="../assets/js/modules/sampling-algorithms.js"></script>
+  <script src="../assets/js/data/beam-search-data.js"></script>
+  <script src="../assets/js/modules/beam-search-algorithms.js"></script>
+  <script src="../assets/js/modules/beam-search.js"></script>
+</body>
+</html>
