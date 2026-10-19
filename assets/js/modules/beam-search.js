@@ -9,7 +9,7 @@
     ['下一词元分布','每条候选束根据各自的上下文获得下一词元的完整概率分布。'],
     ['展开','每条候选束只需保留其前 B 个词元候选：同一父节点的第 B+1 名不可能进入全局前 B。'],
     ['打分','新路径使用原始分数 = 父路径原始分数 + log(词元概率)。'],
-    ['长度惩罚','排序分数 = 原始分数 / ((5 + 生成长度) / 6)^α；EOS 不计入生成长度。'],
+    ['长度惩罚','EOS 不计入生成长度。','ranking_score = raw_log_score / (((5 + length) / 6)^α)'],
     ['排序','来自所有父候选束的路径放在同一个列表中，按排序分数进行全局排序。'],
     ['剪枝','仅保留全局前 B 条候选；其余节点留在搜索树中并标记为“已剪枝”。'],
     ['下一步','保留下来的非 EOS 候选成为下一轮的活跃候选束。'],
@@ -106,10 +106,13 @@
 
     const stats = [['步骤',search.step],['活跃',search.activeBeams.length],['已完成',search.finishedHypotheses.filter((item) => item.status === 'finished').length],['已展开',search.expandedNodes],['已剪枝',search.prunedNodes]].map(([label,value]) => el('span', { text:`${label} ${value}` }));
     const beamRows = search.activeBeams.map((beam, index) => el('tr', {}, [el('td', { text:index + 1 }), el('td', { text:sequence(beam.tokens) }), el('td', { text:visibleToken(beam.tokens.at(-1) || '提示词') }), el('td', { text:format(beam.rawScore) }), el('td', { text:String(beam.length) }), el('td', { text:format(math.lengthPenalty(beam.length, state.config.alpha)) }), el('td', { text:format(beam.normalizedScore) }), el('td', { text:'活跃' })]));
-    const current = el('section', { className:'beam-panel' }, [el('p', { className:'tool-label', text:'B · 当前候选束' }), el('div', { className:'beam-stats' }, stats), el('p', { className:'input-help', text:'长度只统计新生成的词元；<EOS> 不计入长度。候选束宽度为 1 时，保留路径等同于贪心搜索。' }), el('div', { className:'beam-table-wrap' }, el('table', { className:'beam-table' }, [el('thead', {}, el('tr', {}, ['排名','生成序列','最后词元','原始对数分数','长度','LP','排序分数','状态'].map((text) => el('th', { text })))), el('tbody', {}, beamRows.length ? beamRows : el('tr', {}, el('td', { colspan:8, text:'没有活跃候选束：保留路径均已完成或被截断。' })))]))]);
+    const current = el('section', { className:'beam-panel' }, [el('p', { className:'tool-label', text:'B · 当前候选束' }), el('div', { className:'beam-stats' }, stats), el('p', { className:'input-help', text:'长度只统计新生成的词元；<EOS> 不计入长度。候选束宽度为 1 时，保留路径等同于贪心搜索。' }), el('div', { className:'beam-formula-stack' }, [el('p', { className:'formula', text:`LP(length) = ((5 + length) / 6)^${state.config.alpha}` }), el('p', { className:'formula', text:'ranking_score = raw_log_score / LP(length)' })]), el('div', { className:'beam-table-wrap' }, el('table', { className:'beam-table' }, [el('thead', {}, el('tr', {}, ['排名','生成序列','最后词元','原始对数分数','长度','LP','排序分数','状态'].map((text) => el('th', { text })))), el('tbody', {}, beamRows.length ? beamRows : el('tr', {}, el('td', { colspan:8, text:'没有活跃候选束：保留路径均已完成或被截断。' })))]))]);
 
     const activeStage = stages[state.stage];
-    const stepNavigator = el('section', { className:'beam-step-area' }, [el('div', { className:'beam-step-nav', 'aria-label':'束搜索解码步骤' }, stages.map(([name], index) => button(`${String(index + 1).padStart(2,'0')} ${name}`, `beam-step${index === state.stage ? ' is-active' : ''}`, () => { state.stage = index; render(); }, index === state.stage ? { 'aria-current':'step' } : {}))), el('div', { className:'beam-explanation' }, [el('p', { className:'tool-label', text:`当前发生什么？· ${activeStage[0]}` }), el('p', { text:activeStage[1] })])]);
+    const stageContent = activeStage[2]
+      ? [el('p', { className:'formula beam-stage-formula', text:activeStage[2] }), el('p', { text:activeStage[1] })]
+      : el('p', { text:activeStage[1] });
+    const stepNavigator = el('section', { className:'beam-step-area' }, [el('div', { className:'beam-step-nav', 'aria-label':'束搜索解码步骤' }, stages.map(([name], index) => button(`${String(index + 1).padStart(2,'0')} ${name}`, `beam-step${index === state.stage ? ' is-active' : ''}`, () => { state.stage = index; render(); }, index === state.stage ? { 'aria-current':'step' } : {}))), el('div', { className:'beam-explanation' }, [el('p', { className:'tool-label', text:`当前发生什么？· ${activeStage[0]}` }), stageContent])]);
 
     const distributionBlocks = search.distributions.length ? search.distributions.map((entry) => el('article', { className:'beam-distribution' }, [el('h3', { text:entry.sequence }), el('p', { className:'input-help', text:'该父候选束的高概率词元。完整词表会先参与打分，再选择每个父节点前 B 个扩展。' }), el('div', { className:'beam-token-list' }, entry.all.map((item) => { const bar = el('span', { className:'beam-probability-bar', text:`${visibleToken(item.token)} · p ${format(item.probability)} · log p ${format(item.logProbability)}`, 'aria-label':`${item.token}，概率 ${format(item.probability)}，对数概率 ${format(item.logProbability)}` }); bar.style.setProperty('--probability', `${item.probability * 100}%`); return bar; }))])) : el('p', { className:'beam-empty', text:'展开一步解码，即可查看每个父候选束的下一词元分布。' });
     const distributions = el('section', { className:'beam-panel' }, [el('p', { className:'tool-label', text:'C · 下一词元分布' }), distributionBlocks]);
@@ -145,19 +148,19 @@
         el('p', { className:'tool-label', text:'最终结果' }),
         best ? [
           el('h3', { text:sequence(best.tokens) }),
-          el('p', { className:'formula', text:`原始分数 ${format(best.rawScore)} · LP ${format(math.lengthPenalty(best.length, state.config.alpha))} · 排序分数 ${format(best.normalizedScore)}` }),
+          el('p', { className:'formula', text:`raw_score = ${format(best.rawScore)}；LP = ${format(math.lengthPenalty(best.length, state.config.alpha))}；ranking_score = ${format(best.normalizedScore)}` }),
           el('p', { className:'input-help', text:`候选束宽度 ${state.config.beamWidth}。高亮的搜索树路径可从该假设回溯至提示词根节点。` })
         ] : el('p', { className:'beam-empty', text:'产生 EOS 或达到最大生成词元数后会显示最终结果。' })
       ])
     ]);
 
     const greedy = runComplete({ ...state.config, beamWidth:1 }); const beam = runComplete({ ...state.config }); const greedyBest = hypothesisRows(greedy)[0]; const beamBest = hypothesisRows(beam)[0];
-    const widthExperiment = [1,2,3,5].map((width) => { const result = runComplete({ ...state.config, beamWidth:width }); const resultBest = hypothesisRows(result)[0]; return el('li', { text:`B=${width} · ${resultBest ? sequence(resultBest.tokens) : '—'} · 分数 ${resultBest ? format(resultBest.normalizedScore) : '—'} · 已展开 ${result.expandedNodes} · 已剪枝 ${result.prunedNodes}` }); });
+    const widthExperiment = [1,2,3,5].map((width) => { const result = runComplete({ ...state.config, beamWidth:width }); const resultBest = hypothesisRows(result)[0]; return el('li', {}, [el('strong', { text:`B=${width} · ${resultBest ? sequence(resultBest.tokens) : '—'}` }), el('span', { text:`分数 ${resultBest ? format(resultBest.normalizedScore) : '—'} · 已展开 ${result.expandedNodes} · 已剪枝 ${result.prunedNodes}` })]); });
     const comparison = el('section', { className:'beam-grid beam-grid--compare' }, [
       el('article', { className:'beam-panel' }, [
         el('p', { className:'tool-label', text:'G · 与贪心搜索对比' }),
         el('div', { className:'beam-decoder-compare' }, [
-          el('div', {}, [el('h3', { text:'贪心搜索 / B = 1' }), el('p', { text:greedyBest ? sequence(greedyBest.tokens) : '—' }), el('span', { text:`分数 ${greedyBest ? format(greedyBest.normalizedScore) : '—'}` })]),
+          el('div', {}, [el('h3', { text:'贪心搜索 / B = 1' }), greedyBest && sequence(greedyBest.tokens).startsWith('will help understand') ? el('p', {}, [el('span', { className:'beam-sequence-nowrap', text:'will help understand' }), document.createTextNode(sequence(greedyBest.tokens).slice('will help understand'.length))]) : el('p', { text:greedyBest ? sequence(greedyBest.tokens) : '—' }), el('span', { text:`分数 ${greedyBest ? format(greedyBest.normalizedScore) : '—'}` })]),
           el('div', {}, [el('h3', { text:`束搜索 / B = ${state.config.beamWidth}` }), el('p', { text:beamBest ? sequence(beamBest.tokens) : '—' }), el('span', { text:`分数 ${beamBest ? format(beamBest.normalizedScore) : '—'}` })])
         ]),
         el('p', { className:'input-help', text:'贪心搜索每一步只选择局部最优的延续；束搜索会保留多条高分假设，但仍是有限宽度近似，并非穷举搜索。' })

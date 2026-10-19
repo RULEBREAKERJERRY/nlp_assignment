@@ -9,6 +9,13 @@
   const safeWrite = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* browser storage can be unavailable */ } };
   const shuffle = (items) => [...items].sort(() => Math.random() - .5);
   const byId = new Map(terms.map((term) => [term.id, term]));
+  const metricFormulas = {
+    accuracy:'Accuracy = (TP + TN) / (TP + TN + FP + FN)',
+    precision:'Precision = TP / (TP + FP)',
+    recall:'Recall = TP / (TP + FN)',
+    f1:'F1 = 2 × Precision × Recall / (Precision + Recall)',
+    perplexity:'PPL = exp(−1 / N × Σ log p(xᵢ))'
+  };
   const h = (tag, props = {}, children = []) => {
     const node = document.createElement(tag);
     Object.entries(props).forEach(([key, value]) => {
@@ -84,7 +91,7 @@
       h('div', {}, [h('dt', { text:'为什么' }), h('dd', { text:term.explanation })]),
       h('div', {}, [h('dt', { text:'易混淆点' }), h('dd', { text:term.confusion })])
     ]);
-    return h('div', { className:`term-feedback ${correct ? 'term-feedback--correct' : 'term-feedback--wrong'}` }, [h('p', { className:'feedback-status', text:correct ? '正确 · 匹配无误。' : '请复习 · 需要重新辨析。' }), list]);
+    return h('div', { className:`term-feedback ${correct ? 'term-feedback--correct' : 'term-feedback--wrong'}` }, [h('p', { className:'feedback-status', text:correct ? '正确 · 匹配无误。' : '请复习 · 需要重新辨析。' }), list, metricFormulas[term.id] ? h('p', { className:'formula', text:metricFormulas[term.id] }) : null]);
   };
   const optionGroup = (term, key, label) => {
     const response = state.responses[term.id] || {};

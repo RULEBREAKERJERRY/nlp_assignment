@@ -1,4 +1,13 @@
 (() => {
+  const mainScript = document.currentScript;
+  if (!window.NLPToolboxMath && mainScript?.src && !document.querySelector('script[data-nlp-math-renderer]')) {
+    const mathRenderer = document.createElement('script');
+    mathRenderer.src = new URL('math-renderer.js', mainScript.src).href;
+    mathRenderer.dataset.nlpMathRenderer = 'true';
+    mathRenderer.async = false;
+    document.head.append(mathRenderer);
+  }
+
   const toggle = document.querySelector('.nav-toggle');
   const menu = document.querySelector('.nav-list');
   const links = document.querySelectorAll('.nav-list a');
@@ -37,7 +46,7 @@
     { file: 'bpe.html', label: '10 BPE 子词切分', section: 'extensions' },
     { file: 'retrieval.html', label: '11 信息检索与 RAG', section: 'extensions' },
     { file: 'beam-search.html', label: '12 Beam Search', section: 'extensions' },
-    { file: 'jev-decision.html', label: '13 Jev · AI Decision Lab', section: 'decision-intelligence' }
+    { file: 'jev-decision.html', label: '13 Jev · AI 决策实验室', section: 'decision-intelligence' }
   ];
   const currentFile = window.location.pathname.split('/').pop();
   const currentIndex = modules.findIndex((module) => module.file === currentFile);

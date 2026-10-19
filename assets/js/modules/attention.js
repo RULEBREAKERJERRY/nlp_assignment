@@ -82,7 +82,7 @@
     const qkv = el('section', { className: 'sim-panel' }, [
       el('p', { className: 'tool-label', text: '01–03 词向量 / Q K V' }),
       el('p', { text: `当前 Query：${tokens[queryIndex]}` }),
-      el('p', { className: 'formula', text: 'Q = XWq · K = XWk · V = XWv' }),
+      el('p', { className: 'formula', text: 'Q = XW_q；K = XW_k；V = XW_v' }),
       el('div', { className: 'sim-scroll' }, el('table', { className: 'sim-matrix' }, [
         el('thead', {}, el('tr', {}, [el('th', { text: '词元' }), el('th', { text: 'Q' }), el('th', { text: 'K' }), el('th', { text: 'V' })])),
         el('tbody', {}, qkvRows)
@@ -101,7 +101,7 @@
     ));
     const scores = el('section', { className: 'sim-panel' }, [
       el('p', { className: 'tool-label', text: '04–06 分数 / 遮罩 / Softmax' }),
-      el('p', { className: 'formula', text: `scoreᵢ = Q·Kᵢ${state.scaled ? ' / √dₖ' : ''}；遮罩在 Softmax 前应用` }),
+      el('p', { className: 'formula', text: `scoreᵢ = ${state.scaled ? '(Q · Kᵢ) / √dₖ' : 'Q · Kᵢ'}；mask → softmax(scores)` }),
       el('p', { text: `当前计算：Q_${tokens[queryIndex]} · K_${tokens[keyIndex]} = ${output.query.map((value, index) => `${format(value)}×${format(output.k[keyIndex][index])}`).join(' + ')} = 原始分数 ${format(output.raw[keyIndex])}；最终分数 ${format(selectedScore)}。` }),
       el('div', { className: 'attention-bars' }, scoreBars),
       el('p', { text: `权重之和 = ${format(output.weights.reduce((sum, value) => sum + value, 0))}` })
@@ -126,7 +126,7 @@
 
     const context = el('section', { className: 'sim-panel' }, [
       el('p', { className: 'tool-label', text: '07–08 加权 Value / 上下文向量' }),
-      el('p', { className: 'formula', text: 'Context = Σ αᵢVᵢ' }),
+      el('p', { className: 'formula', text: 'Context = Σ (αᵢ × Vᵢ)' }),
       el('p', { text: `加权 Value：${output.weighted.map((row, index) => `${format(output.weights[index])}×V_${tokens[index]}=[${row.map(format).join(', ')}]`).join('；')}` }),
       el('p', { text: `上下文向量：[ ${output.context.map(format).join(', ')} ]` }),
       el('p', { className: 'input-help', text: 'Attention 权重描述的是这一次加权求和；它本身不能完整解释模型行为，更不等同于因果解释。' })

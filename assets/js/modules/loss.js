@@ -23,7 +23,7 @@
   };
   const button = (text, className, onClick) => el('button', { type: 'button', className, text, onClick });
   const format = (value, digits = 3) => Number.isFinite(value) ? Number(value).toFixed(digits) : '—';
-  const metric = (label, value) => el('div', {}, [el('span', { text: label }), el('strong', { text: value })]);
+  const metric = (label, value) => el('div', {}, [el('span', { text: label }), el('strong', { className:label === '公式' ? 'formula-inline' : '', text: value })]);
   const statusLabel = (status) => ({ READY: '就绪', CONVERGING: '收敛中', SLOW: '下降缓慢', OSCILLATING: '震荡', DIVERGING: '发散', 'NUMERICAL INSTABILITY': '数值不稳定' }[status] || status);
   const pointPath = (points, width, height, maxY, minX = 0, maxX = points.length - 1) => {
     const padding = { left: 44, right: 18, top: 16, bottom: 30 };
@@ -147,7 +147,8 @@
         el('thead', {}, el('tr', {}, ['类别', 'y', 'p', '−y log(p)'].map((text) => el('th', { text })))),
         el('tbody', {}, labels.map((label, index) => el('tr', {}, [el('th', { text: label }), el('td', { text: targets[index] }), el('td', { text: format(predictions[index]) }), el('td', { text: format(-targets[index] * Math.log(math.clampProbability(predictions[index]))) })])))
       ])),
-      el('p', { className: 'input-help', text: '对于 one-hot 目标，多分类交叉熵 −Σ yᵢlog(pᵢ) 可化为 −log(p_correct)。概率会用 ε=1e−12 裁剪，因此不会出现 log(0)。' })
+      el('p', { className: 'formula', text: 'L = −Σ (yᵢ × log(pᵢ)) = −log(p_correct)' }),
+      el('p', { className: 'input-help', text: '对于 one-hot 目标，多分类交叉熵可化为正确类别概率的负对数。概率会用 ε=1e−12 裁剪，因此不会出现 log(0)。' })
     ]);
 
     const lrInput = el('input', { type: 'number', min: '.0001', max: '10', step: '.001', value: state.lr, 'aria-label': '逻辑回归学习率' });
@@ -180,7 +181,7 @@
       ])),
       el('div', { className: 'step-summary' }, [
         el('p', { className: 'tool-label', text: '当前更新' }),
-        el('p', { className: 'formula', text: current ? `dw=${format(current.dw)}, db=${format(current.db)}；w：${format(current.oldWeight)} − ${format(state.lr)}×${format(current.dw)} = ${format(current.nextWeight)}；b：${format(current.oldBias)} − ${format(state.lr)}×${format(current.db)} = ${format(current.nextBias)}` : '点击“单步更新”可计算解析梯度，并执行一次参数更新。' }),
+        current ? el('p', { className: 'formula', text:`dw = ${format(current.dw)}；db = ${format(current.db)}；w = ${format(current.oldWeight)} − ${format(state.lr)} × ${format(current.dw)} = ${format(current.nextWeight)}；b = ${format(current.oldBias)} − ${format(state.lr)} × ${format(current.db)} = ${format(current.nextBias)}` }) : el('p', { className:'input-help', text:'点击“单步更新”可计算解析梯度，并执行一次参数更新。' }),
         el('p', { className: 'input-help', text: '数据集使用 4 个抽象的一维“证据”值，而非真实文本词向量。梯度为批量均值：dw = mean((p−y)x)，db = mean(p−y)。' })
       ])
     ]);
@@ -199,7 +200,7 @@
       ]),
       el('div', { className: 'loss-metrics' }, [metric('w', format(state.quadWeight)), metric('损失', format(math.quadraticLoss(state.quadWeight))), metric('训练状态', quadStatus)]),
       landscape(state.quadHistory),
-      el('p', { className: 'formula', text: `L(w)=w²；∂L/∂w=2w；w_next = w − η(2w)。当前 η=${format(state.quadLR, 2)}。` }),
+      el('p', { className: 'formula', text: `L(w) = w²；∂L / ∂w = 2w；w_next = w − η × 2w；η = ${format(state.quadLR, 2)}` }),
       el('h4', { text: '比较不同学习率' }), compareChart(),
       el('p', { className: 'input-help', text: '训练状态是基于真实轨迹的规则型教学提示，并非严格的收敛证明。二次函数示例只用于隔离步长行为，不是 NLP 模型。' })
     ]);

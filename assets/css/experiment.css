@@ -27,6 +27,18 @@
 .tool-button--primary:hover:not(:disabled) { background:var(--accent-deep); color:#fff; }
 .tool-button--danger { color:#a33d43; }
 
+/* Local MathML rendering. Formulas stay readable without network fonts or libraries. */
+.formula,.formula-inline { color:#2f3b49; }
+.formula { max-width:100%; overflow-x:auto; padding:.45rem .1rem; }
+.formula[data-math-rendered="true"] { font-family:inherit !important; }
+.formula math { display:block; width:max-content; min-width:100%; margin:0; font-family:"STIX Two Math","Cambria Math","Times New Roman",serif; font-size:1.04rem; line-height:1.5; text-align:left; }
+.formula-inline { display:inline-flex; max-width:100%; overflow-x:auto; vertical-align:middle; }
+.formula-inline math { font-family:"STIX Two Math","Cambria Math","Times New Roman",serif; font-size:1em; }
+.formula math mfrac { padding-inline:.12em; }
+.formula math mtext,.formula-inline math mtext { font-family:var(--sans); font-size:.88em; }
+.metric-card .formula math { min-width:0; font-size:.94rem; }
+@media (max-width:520px) { .formula math { font-size:.94rem; } }
+
 /* Terminology challenge */
 .tool-controls { display:flex; flex-wrap:wrap; gap:.8rem; align-items:end; padding-bottom:1.5rem; border-bottom:1px solid var(--line); }
 .select-label { display:grid; gap:.3rem; color:var(--muted); font-size:.72rem; font-weight:750; letter-spacing:.08em; }

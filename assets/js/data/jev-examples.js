@@ -1,13 +1,57 @@
 window.NLPToolboxData = window.NLPToolboxData || {};
 window.NLPToolboxData.jev = {
   examples: {
-    support: { label:'客户支持', state:'Customer: My card was charged three times. I need the duplicate charges refunded today. This is blocking an important payment.', choice:{ name:'department', question:'Which support queue best fits this request?', options:[['Billing','Payments, charges, refunds and invoices.'],['Technical','Errors, outages, integrations and product failures.'],['Account','Login, access, profile and account changes.'],['Sales','Plans, pricing and purchase questions.'],['Review','Fallback when the defined queues do not fit.']] }, score:{ name:'urgency', question:'How urgent is this request?', levels:['Very Low','Low','Medium','High','Critical'] }, noul:{ name:'needs_review', question:'Does this request require human review?' } },
-    security: { label:'安全事件', state:'A process is downloading thousands of confidential files from the production environment and bypassing the normal export workflow.', choice:{ name:'department', question:'Which response queue should own this report?', options:[['Security','Security incidents, suspicious access and data exposure.'],['Technical','Product errors, bugs and service reliability.'],['Operations','Routine operational tasks and monitoring.'],['Review','Fallback when evidence is incomplete.']] }, score:{ name:'risk', question:'How severe is this security risk?', levels:['Very Low','Low','Medium','High','Critical'] }, noul:{ name:'escalate', question:'Should this action be escalated to a human security reviewer?' } },
-    content: { label:'内容审核', state:'A new account posted repeated messages containing threats and targeted harassment toward another user.', choice:{ name:'queue', question:'Which moderation queue best fits this content?', options:[['Safety','Threats, harassment and dangerous content.'],['Spam','Repeated promotional or irrelevant content.'],['Technical','Product errors and account bugs.'],['Review','Fallback for ambiguous cases.']] }, score:{ name:'severity', question:'How severe is this content risk?', levels:['Very Low','Low','Medium','High','Critical'] }, noul:{ name:'human_review', question:'Should this content require human review?' } },
-    research: { label:'研究论文', state:'This paper introduces a multimodal speech benchmark that combines audio, transcript alignment and speaker emotion recognition.', choice:{ name:'topic', question:'Which research category best fits this paper?', options:[['ASR','Automatic speech recognition and transcription.'],['TTS','Text to speech and voice synthesis.'],['Speech Enhancement','Noise reduction and audio restoration.'],['Multimodal Speech','Speech combined with text, vision or other modalities.'],['Other','Fallback for topics outside the listed categories.']] }, score:{ name:'relevance', question:'How relevant is this paper to a speech intelligence reading group?', levels:['Very Low','Low','Medium','High','Critical'] }, noul:{ name:'reading_queue', question:'Should this paper enter the reading queue?' } },
-    agent: { label:'智能体操作', state:'An agent requests permission to permanently delete a production database after detecting a failed migration.', choice:{ name:'route', question:'Which action route best fits this request?', options:[['Human Review','Irreversible or high-impact actions requiring approval.'],['Automated Repair','Safe reversible technical remediation.'],['Monitoring','Observe and collect more evidence.'],['Review','Fallback for unclear requests.']] }, score:{ name:'impact', question:'How severe is the potential operational impact?', levels:['Very Low','Low','Medium','High','Critical'] }, noul:{ name:'approval', question:'Should this action require human approval?' } }
+    support: {
+      label: '客户支持',
+      state: '客户的银行卡被重复扣款三次，需要今天退还重复扣款；这笔问题阻塞了一笔重要付款。',
+      choice: { name: '处理队列', question: '该请求最适合进入哪个支持队列？', options: [['账务', '付款、扣款、退款、发票及重复收费问题。'], ['技术支持', '错误、故障、集成与产品异常问题。'], ['账户支持', '登录、访问、个人资料与账户变更问题。'], ['销售咨询', '套餐、价格与购买相关问题。'], ['人工复核', '当预设队列均不适用时的兜底处理。']] },
+      score: { name: '紧急程度', question: '该请求的紧急程度如何？', levels: ['极低', '低', '中等', '高', '严重'] },
+      noul: { name: '需要人工复核', question: '该请求是否需要人工复核？' }
+    },
+    security: {
+      label: '安全事件',
+      state: '某个进程正在从生产环境下载数千个机密文件，并绕过了正常的数据导出流程。',
+      choice: { name: '处理队列', question: '哪一个响应队列应负责处理这份报告？', options: [['安全响应', '安全事件、异常访问和数据泄露问题。'], ['技术支持', '产品错误、缺陷和服务可靠性问题。'], ['运营处理', '常规运营任务与监控工作。'], ['人工复核', '证据不完整时的兜底处理。']] },
+      score: { name: '风险等级', question: '该安全风险有多严重？', levels: ['极低', '低', '中等', '高', '严重'] },
+      noul: { name: '需要升级', question: '是否应将该操作升级给人工安全审核员？' }
+    },
+    content: {
+      label: '内容审核',
+      state: '一个新账户反复发布包含威胁和针对性骚扰的信息，攻击另一位用户。',
+      choice: { name: '审核队列', question: '哪一个内容审核队列最适合处理这些内容？', options: [['安全审核', '威胁、骚扰和危险内容。'], ['垃圾内容', '重复的推广信息或无关内容。'], ['技术支持', '产品错误与账户异常问题。'], ['人工复核', '案例含义不明确时的兜底处理。']] },
+      score: { name: '严重程度', question: '这些内容的风险有多严重？', levels: ['极低', '低', '中等', '高', '严重'] },
+      noul: { name: '需要人工复核', question: '这些内容是否需要人工复核？' }
+    },
+    research: {
+      label: '研究论文',
+      state: '这篇论文提出了一个多模态语音基准，将音频、转写对齐和说话人情感识别结合起来。',
+      choice: { name: '研究主题', question: '这篇论文最适合归入哪个研究类别？', options: [['自动语音识别', '自动语音识别与语音转写。'], ['语音合成', '文本转语音与声音合成。'], ['语音增强', '降噪和音频修复。'], ['多模态语音', '将语音与文本、视觉或其他模态结合。'], ['其他', '不属于已列类别时的兜底选项。']] },
+      score: { name: '相关性', question: '这篇论文与语音智能读书会的相关性如何？', levels: ['极低', '低', '中等', '高', '严重'] },
+      noul: { name: '进入阅读队列', question: '这篇论文是否应进入阅读队列？' }
+    },
+    agent: {
+      label: '智能体操作',
+      state: '一个智能体在检测到迁移失败后，请求永久删除生产数据库的权限。',
+      choice: { name: '动作路径', question: '哪一种动作路径最适合处理这个请求？', options: [['人工审批', '不可逆或高影响操作，需要获得批准。'], ['自动修复', '安全且可逆的技术修复。'], ['持续监控', '先观察并收集更多证据。'], ['人工复核', '请求含义不明确时的兜底处理。']] },
+      score: { name: '影响程度', question: '潜在的运维影响有多严重？', levels: ['极低', '低', '中等', '高', '严重'] },
+      noul: { name: '需要批准', question: '该操作是否需要人工批准？' }
+    }
   },
   taskQuiz: [
-    ['计算两个日期相差多少天','CODE','日期差是确定性计算。'],['判断投诉应进入哪个支持队列','JEV','这是有界的路由判断。'],['根据文章撰写摘要','LLM','摘要需要开放式文本生成。'],['评价文档相关性 1～5 分','JEV','有序量表判断适合 Score。'],['检查用户是否拥有 admin 权限','CODE','权限检查应由确定性规则与数据库完成。'],['按 BPE merge rule 编码 token','CODE','Tokenizer 规则是确定性算法。'],['用余弦相似度检索 top-k 文档','CODE','检索打分与排序是确定性流程。'],['判断检索文档是否真正回答问题','JEV','相关性判断可用 Score 或 Noul。'],['按概率随机选择下一个 token','CODE','09 模块中的采样是确定性实现的随机算法。'],['解释为什么一个实验失败','LLM','解释需要自然语言组织。'],['判断当前操作是否需要人工批准','JEV','这是明确的 yes/no 概率判断。'],['校验 JSON 是否符合 schema','CODE','格式验证不需要模型判断。'],['为课程项目写一段介绍','LLM','写作是开放式生成。'],['把高风险工单按严重度排序','JEV','风险与严重度属于结构化评分判断。'],['根据 Beam Search 规则扩展候选序列','CODE','候选扩展和剪枝由算法精确计算。']
+    ['计算两个日期相差多少天', 'CODE', '日期差属于确定性计算。'],
+    ['判断投诉应进入哪个支持队列', 'JEV', '这是边界清晰的路由判断。'],
+    ['根据文章撰写摘要', 'LLM', '摘要需要开放式文本生成。'],
+    ['评价文档相关性为 1～5 分', 'JEV', '有序量表判断适合使用 Score。'],
+    ['检查用户是否拥有管理员权限', 'CODE', '权限检查应由确定性规则与数据库完成。'],
+    ['按 BPE 合并规则编码 Token', 'CODE', 'Tokenizer 规则是确定性算法。'],
+    ['用余弦相似度检索 Top-k 文档', 'CODE', '检索打分与排序是确定性流程。'],
+    ['判断检索文档是否真正回答问题', 'JEV', '相关性判断可使用 Score 或 Noul。'],
+    ['按概率随机选择下一个 Token', 'CODE', '09 模块中的采样由确定性实现的随机算法执行。'],
+    ['解释为什么一个实验失败', 'LLM', '解释需要组织自然语言。'],
+    ['判断当前操作是否需要人工批准', 'JEV', '这是明确的是 / 否概率判断。'],
+    ['校验 JSON 是否符合 Schema', 'CODE', '格式验证不需要模型判断。'],
+    ['为课程项目写一段介绍', 'LLM', '写作属于开放式生成。'],
+    ['把高风险工单按严重度排序', 'JEV', '风险与严重度属于结构化评分判断。'],
+    ['根据 Beam Search 规则扩展候选序列', 'CODE', '候选扩展和剪枝由算法精确计算。']
   ]
 };

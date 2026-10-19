@@ -97,7 +97,7 @@
       el('p', { text: `特征图：[ ${filter.activations.map(format).join(', ')} ]` }),
       el('p', { text: `最大池化：${format(filter.pool.value)}，位于窗口 ${filter.pool.index + 1} [${tokens.slice(filter.pool.index, filter.pool.index + filter.kernel.length).join(', ')}]` }),
       el('p', { className: 'tool-label', text: '07 分类' }),
-      el('p', { className: 'formula', text: 'logits = Wc × pooled features + bc; p = softmax(logits)' }),
+      el('p', { className: 'formula', text: 'logits = W_c × pooled_features + b_c；p = softmax(logits)' }),
       el('p', { text: `特征向量：[ ${result.features.map(format).join(', ')} ]` }),
       el('p', { text: `Logits：[ ${result.logits.map(format).join(', ')} ]` }),
       el('div', { className: 'probability-list' }, result.probabilities.map((value, index) => el('p', { text: `${data.classifier.labels[index]} · ${(value * 100).toFixed(1)}%` }))),

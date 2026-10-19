@@ -2,7 +2,8 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="信息检索与 RAG 实验室｜NLP 百宝箱"><title>信息检索与 RAG｜NLP 百宝箱</title>
+  <meta name="description" content="信息检索与 RAG｜NLP 百宝箱"><title>信息检索与 RAG｜NLP 百宝箱</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2310141c'/%3E%3Cpath d='M17 15h30v34H17z' fill='none' stroke='%236e8ef7' stroke-width='3'/%3E%3Cpath d='M24 25h16M24 33h16M24 41h9' stroke='%23f7f7f7' stroke-width='3'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="../assets/css/main.css"><link rel="stylesheet" href="../assets/css/responsive.css"><link rel="stylesheet" href="../assets/css/experiment.css"><link rel="stylesheet" href="../assets/css/extensions.css"><link rel="stylesheet" href="../assets/css/retrieval.css">
 </head>
 <body class="module-page">
@@ -10,7 +11,7 @@
   <header class="site-header"><a class="brand" href="../index.html" aria-label="NLP 百宝箱首页"><span class="brand__en">NLP TOOLBOX</span><span class="brand__cn">NLP 百宝箱</span></a></header>
   <nav class="primary-nav" aria-label="主导航"><div class="nav-wrap"><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-menu"><span>菜单</span><span class="nav-toggle__icon" aria-hidden="true"></span></button><ul id="primary-menu" class="nav-list"><li><a href="../index.html">首页</a></li><li><a href="../index.html#foundations">入门夯实</a></li><li><a href="../index.html#simulation">中阶原理仿真</a></li><li><a href="../index.html#engineering">高阶工程虚仿</a></li><li><a class="is-active" href="../index.html#extensions">拓展探索</a></li><li><a href="../index.html#about">关于项目</a></li></ul></div></nav>
   <main id="main-content" class="experiment-main">
-    <header class="module-intro"><span class="module-number">11</span><p class="kicker">RETRIEVAL LAB</p><h1>信息检索与 RAG 实验室</h1><p>从查询、文档分块到真实的稀疏检索、上下文组装与证据式回答预览，观察外部知识如何进入 RAG 流程。</p></header>
+    <header class="module-intro"><span class="module-number">11</span><p class="kicker">RETRIEVAL LAB</p><h1>信息检索与 RAG</h1><p>从查询、文档分块到真实的稀疏检索、上下文组装与证据式回答预览，观察外部知识如何进入 RAG 流程。</p></header>
     <section class="experiment-block"><h2>实验概览</h2><div class="extension-overview"><p class="tool-label">词法检索流程</p><h3>从问题到可追溯的外部上下文</h3><p>本地知识库会经过文档分块、倒排索引、TF-IDF / BM25 排序和上下文组装。所有排名与证据都由当前文档和查询实时计算。</p><div class="extension-pipeline" style="--steps:7"><span>01 查询</span><span>02 文档</span><span>03 分块</span><span>04 检索</span><span>05 排名</span><span>06 上下文</span><span>07 回答预览</span></div></div></section>
     <section class="experiment-block"><h2>实验区域</h2><div class="experiment-shell experiment-shell--tool" data-experiment="retrieval"></div></section>
     <section class="experiment-block module-knowledge"><section><h3>学习目标</h3><p>理解文档如何切分、建立词项索引、按相关性排序，并以可追溯来源组装为生成模型准备的上下文。</p></section><section><h3>核心知识</h3><ul class="extension-concepts"><li>查询</li><li>文档</li><li>分块</li><li>TF-IDF</li><li>BM25</li><li>倒排索引</li><li>Top-k</li><li>上下文</li><li>RAG</li></ul></section><section><h3>实验说明</h3><p>这是本地稀疏检索教学实现：真实计算 TF-IDF 余弦相似度与 BM25，并从检索到的证据句生成抽取式预览。它不包含稠密向量、向量数据库、重排序器或真实 LLM 生成。</p></section></section>

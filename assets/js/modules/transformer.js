@@ -126,7 +126,7 @@
     else visual = [matrixPanel('Block output', result.output, tokens, '第二次 LayerNorm 的输出：每个词元的上下文化表示。', { heatmap: true }), matrixPanel('Input', result.input, tokens, '更新前：词向量 + 位置编码。'), matrixPanel('Norm 2 / output', result.output, tokens, '更新后：Transformer 模块输出。', { heatmap: true })];
     const formula = el('aside', { className: 'transformer-formula' }, [
       el('p', { className: 'tool-label', text: '公式 / 单元格查看器' }),
-      el('p', { className: 'formula', text: state.step < 3 ? 'X = Embedding + Positional Encoding' : state.step < 7 ? 'Attention(Q,K,V) = softmax(QKᵀ / √dₖ + mask)V' : state.step < 9 ? 'Norm1 = LayerNorm(X + MultiHead(X))' : state.step === 9 ? 'FFN(x) = ReLU(xW1 + b1)W2 + b2' : 'Output = LayerNorm(Norm1 + FFN(Norm1))' }),
+      el('p', { className: 'formula', text: state.step < 3 ? 'X = Embedding + Positional_Encoding' : state.step < 7 ? 'Attention(Q,K,V) = softmax((QKᵀ / √dₖ) + mask) × V' : state.step < 9 ? 'Norm_1 = LayerNorm(X + MultiHead(X))' : state.step === 9 ? 'FFN(x) = ReLU(xW_1 + b_1)W_2 + b_2' : 'Output = LayerNorm(Norm_1 + FFN(Norm_1))' }),
       currentDetail(result, tokens),
       el('p', { className: 'input-help', text: state.causal ? '因果模式会在 Softmax 前遮住未来的 Key；被遮罩的单元格会明确标记。' : '双向模式允许每一组 Query / Key 相互可见。' })
     ]);
