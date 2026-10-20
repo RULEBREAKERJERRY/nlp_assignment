@@ -114,7 +114,7 @@
       : el('p', { text:activeStage[1] });
     const stepNavigator = el('section', { className:'beam-step-area' }, [el('div', { className:'beam-step-nav', 'aria-label':'束搜索解码步骤' }, stages.map(([name], index) => button(`${String(index + 1).padStart(2,'0')} ${name}`, `beam-step${index === state.stage ? ' is-active' : ''}`, () => { state.stage = index; render(); }, index === state.stage ? { 'aria-current':'step' } : {}))), el('div', { className:'beam-explanation' }, [el('p', { className:'tool-label', text:`当前发生什么？· ${activeStage[0]}` }), stageContent])]);
 
-    const distributionBlocks = search.distributions.length ? search.distributions.map((entry) => el('article', { className:'beam-distribution' }, [el('h3', { text:entry.sequence }), el('p', { className:'input-help', text:'该父候选束的高概率词元。完整词表会先参与打分，再选择每个父节点前 B 个扩展。' }), el('div', { className:'beam-token-list' }, entry.all.map((item) => { const bar = el('span', { className:'beam-probability-bar', text:`${visibleToken(item.token)} · p ${format(item.probability)} · log p ${format(item.logProbability)}`, 'aria-label':`${item.token}，概率 ${format(item.probability)}，对数概率 ${format(item.logProbability)}` }); bar.style.setProperty('--probability', `${item.probability * 100}%`); return bar; }))])) : el('p', { className:'beam-empty', text:'展开一步解码，即可查看每个父候选束的下一词元分布。' });
+    const distributionBlocks = search.distributions.length ? search.distributions.map((entry) => el('article', { className:'beam-distribution' }, [el('h3', { text:entry.sequence }), el('p', { className:'input-help', text:'该父候选束的高概率词元。完整词表会先参与打分，再选择每个父节点前 B 个扩展。' }), el('div', { className:'beam-token-list' }, entry.all.map((item) => { const bar = el('span', { className:'beam-probability-bar', 'aria-label':`${item.token}，概率 ${format(item.probability)}，对数概率 ${format(item.logProbability)}` }, [el('span', { className:'beam-probability-fill', 'aria-hidden':'true' }), el('span', { className:'beam-probability-label', text:`${visibleToken(item.token)} · p ${format(item.probability)} · log p ${format(item.logProbability)}` })]); bar.style.setProperty('--probability', `${item.probability * 100}%`); return bar; }))])) : el('p', { className:'beam-empty', text:'展开一步解码，即可查看每个父候选束的下一词元分布。' });
     const distributions = el('section', { className:'beam-panel' }, [el('p', { className:'tool-label', text:'C · 下一词元分布' }), distributionBlocks]);
 
     const candidateRows = search.lastCandidates.map((candidate, index) => { const kept = ['active','finished','truncated'].includes(candidate.status); const pruneLine = index === state.config.beamWidth; return [pruneLine ? el('tr', { className:'beam-prune-line' }, el('td', { colspan:9, text:`剪枝线 · 仅保留全局前 ${state.config.beamWidth} 条候选` })) : null, el('tr', { className:`beam-candidate-row is-${candidate.status}${candidate.id === state.selectedNodeId ? ' is-selected' : ''}` }, [el('td', { text:index + 1 }), el('td', {}, button(sequence(candidate.tokens), 'beam-link-button', () => { state.selectedNodeId = candidate.id; render(); }, { 'aria-label':`查看候选路径 ${candidate.sequence}` })), el('td', { text:visibleToken(candidate.token) }), el('td', { text:format(candidate.tokenProbability) }), el('td', { text:format(candidate.tokenLogProbability) }), el('td', { text:format(candidate.rawScore) }), el('td', { text:format(candidate.lengthPenalty) }), el('td', { text:format(candidate.normalizedScore) }), el('td', { text:kept ? candidate.status === 'active' ? '活跃' : candidate.status === 'finished' ? '已完成' : '已截断' : '已剪枝' })])]; }).flat();
@@ -123,7 +123,7 @@
     const inspector = selectedNode && selectedNode.id !== 'root'
       ? el('article', { className:'beam-score-inspector' }, [
         el('p', { className:'tool-label', text:'分数查看器' }),
-        el('p', { text:`父序列：${parent?.sequence || '提示词根节点'}` }),
+        el('p', { className:'beam-parent-sequence', text:`父序列：${parent?.sequence || '提示词根节点'}` }),
         el('p', { className:'formula', text:`${format(parent?.rawScore || 0)} + log(${format(selectedNode.tokenProbability)}) = ${format(selectedNode.rawScore)}` }),
         el('p', { className:'formula', text:`${format(selectedNode.rawScore)} ÷ ${format(selectedNode.lengthPenalty)} = ${format(selectedNode.normalizedScore)}` }),
         el('p', { className:'input-help', text:`词元：${visibleToken(selectedNode.token)} · 生成长度 ${selectedNode.length} · 状态 ${selectedNode.status === 'active' ? '活跃' : selectedNode.status === 'finished' ? '已完成' : selectedNode.status === 'truncated' ? '已截断' : '已剪枝'}` })
@@ -148,7 +148,11 @@
         el('p', { className:'tool-label', text:'最终结果' }),
         best ? [
           el('h3', { text:sequence(best.tokens) }),
-          el('p', { className:'formula', text:`raw_score = ${format(best.rawScore)}；LP = ${format(math.lengthPenalty(best.length, state.config.alpha))}；ranking_score = ${format(best.normalizedScore)}` }),
+          el('div', { className:'beam-final-scores' }, [
+            el('p', { className:'formula', text:`raw_score = ${format(best.rawScore)}` }),
+            el('p', { className:'formula', text:`LP = ${format(math.lengthPenalty(best.length, state.config.alpha))}` }),
+            el('p', { className:'formula', text:`ranking_score = ${format(best.normalizedScore)}` })
+          ]),
           el('p', { className:'input-help', text:`候选束宽度 ${state.config.beamWidth}。高亮的搜索树路径可从该假设回溯至提示词根节点。` })
         ] : el('p', { className:'beam-empty', text:'产生 EOS 或达到最大生成词元数后会显示最终结果。' })
       ])

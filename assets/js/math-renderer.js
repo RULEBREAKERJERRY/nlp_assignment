@@ -20,7 +20,11 @@
   };
   const row = (...children) => mathNode('mrow', children.flat());
   const operator = (value, attributes) => mathNode('mo', value, attributes);
-  const fenced = (content, open = '(', close = ')') => row(operator(open), content, operator(close));
+  const fenceOperator = (value) => operator(value, ['(', ')'].includes(value)
+    ? { fence:'true', stretchy:'false', symmetric:'false' }
+    : { fence:'true' });
+  const delimiterOperator = (value) => ['(', ')'].includes(value) ? fenceOperator(value) : operator(value);
+  const fenced = (content, open = '(', close = ')') => row(fenceOperator(open), content, fenceOperator(close));
 
   const isNumberStart = (char, next) => /\d/.test(char) || (char === '.' && /\d/.test(next || ''));
   const isIdentifierChar = (char) => Boolean(char) && !/\s/.test(char) && !RELATIONS.has(char) && !ADDITIVE.has(char) && !MULTIPLICATIVE.has(char) && !DELIMITERS.has(char) && !['/', '÷', '^'].includes(char);
@@ -81,7 +85,7 @@
         parts.push(this.relation());
         if (this.index >= this.tokens.length) break;
         const token = this.take();
-        parts.push(operator(token.value));
+        parts.push(delimiterOperator(token.value));
         if ([';', '；'].includes(token.value)) parts.push(mathNode('mspace', null, { width:'.65em' }));
       }
       return row(parts);
@@ -135,7 +139,7 @@
         if (this.peek(close)) this.take();
         return fenced(content, token.value, close);
       }
-      if (token.type === 'delimiter') return operator(token.value);
+      if (token.type === 'delimiter') return delimiterOperator(token.value);
       if (LARGE_OPERATORS.has(token.value)) return operator(token.value, { largeop:'true' });
       const identifier = scriptedIdentifier(token.value);
       if (this.peek('(')) {

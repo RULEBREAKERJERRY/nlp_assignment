@@ -36,7 +36,7 @@
     });
     const output = forward(queryIndex);
     const heatmap = tokens.map((_, index) => forward(index));
-    shell.className = 'experiment-shell experiment-shell--tool';
+    shell.className = 'experiment-shell experiment-shell--tool attention-lab';
     shell.replaceChildren();
 
     const input = el('textarea', { rows: '3', value: state.text, 'aria-label': 'Attention 输入序列' });
@@ -79,10 +79,12 @@
       el('td', { text: `[${output.k[index].map(format).join(', ')}]` }),
       el('td', { text: `[${output.v[index].map(format).join(', ')}]` })
     ]));
-    const qkv = el('section', { className: 'sim-panel' }, [
+    const qkv = el('section', { className: 'sim-panel attention-qkv-panel' }, [
       el('p', { className: 'tool-label', text: '01–03 词向量 / Q K V' }),
       el('p', { text: `当前 Query：${tokens[queryIndex]}` }),
-      el('p', { className: 'formula', text: 'Q = XW_q；K = XW_k；V = XW_v' }),
+      el('p', { className: 'formula', text: 'Q = X × W_q' }),
+      el('p', { className: 'formula', text: 'K = X × W_k' }),
+      el('p', { className: 'formula', text: 'V = X × W_v' }),
       el('div', { className: 'sim-scroll' }, el('table', { className: 'sim-matrix' }, [
         el('thead', {}, el('tr', {}, [el('th', { text: '词元' }), el('th', { text: 'Q' }), el('th', { text: 'K' }), el('th', { text: 'V' })])),
         el('tbody', {}, qkvRows)
@@ -99,12 +101,17 @@
       `attention-bar${output.masked[index] === -Infinity ? ' is-masked' : ''}`,
       () => { state.selectedKey = index; render(); }
     ));
-    const scores = el('section', { className: 'sim-panel' }, [
+    const rawProducts = output.query.map((value, index) => `${format(value)} × ${format(output.k[keyIndex][index])}`).join(' + ');
+    const scores = el('section', { className: 'sim-panel attention-score-panel' }, [
       el('p', { className: 'tool-label', text: '04–06 分数 / 遮罩 / Softmax' }),
-      el('p', { className: 'formula', text: `scoreᵢ = ${state.scaled ? '(Q · Kᵢ) / √dₖ' : 'Q · Kᵢ'}；mask → softmax(scores)` }),
-      el('p', { text: `当前计算：Q_${tokens[queryIndex]} · K_${tokens[keyIndex]} = ${output.query.map((value, index) => `${format(value)}×${format(output.k[keyIndex][index])}`).join(' + ')} = 原始分数 ${format(output.raw[keyIndex])}；最终分数 ${format(selectedScore)}。` }),
+      el('p', { className: 'formula', text: `score_j = ${state.scaled ? '(Q_i · K_j) / sqrt(d_k)' : 'Q_i · K_j'}` }),
+      el('p', { className: 'formula', text: 'masked_score_j = mask(score_j)' }),
+      el('p', { className: 'formula', text: 'α_j = softmax(masked_scores)' }),
+      el('p', { text: `当前词元对：Q = ${tokens[queryIndex]}，K = ${tokens[keyIndex]}` }),
+      el('p', { className: 'formula', text: `Q_i · K_j = ${rawProducts} = ${format(output.raw[keyIndex])}` }),
+      el('p', { className: 'formula', text: `final_score_j = ${format(selectedScore)}` }),
       el('div', { className: 'attention-bars' }, scoreBars),
-      el('p', { text: `权重之和 = ${format(output.weights.reduce((sum, value) => sum + value, 0))}` })
+      el('p', { className: 'attention-weight-sum', text: `权重之和 = ${format(output.weights.reduce((sum, value) => sum + value, 0))}` })
     ]);
 
     const heatRows = tokens.map((token, rowIndex) => el('tr', {}, [
@@ -124,10 +131,17 @@
       ]))
     ]);
 
-    const context = el('section', { className: 'sim-panel' }, [
+    const weightedTerms = el('div', { className: 'attention-value-terms' }, output.weighted.map((row, index) =>
+      el('div', { className: 'attention-value-term' }, [
+        el('p', { className: 'formula', text: `α_${index + 1} × V_${index + 1} =` }),
+        el('code', { text: `[ ${row.map(format).join(', ')} ]` })
+      ])
+    ));
+    const context = el('section', { className: 'sim-panel attention-context-panel' }, [
       el('p', { className: 'tool-label', text: '07–08 加权 Value / 上下文向量' }),
-      el('p', { className: 'formula', text: 'Context = Σ (αᵢ × Vᵢ)' }),
-      el('p', { text: `加权 Value：${output.weighted.map((row, index) => `${format(output.weights[index])}×V_${tokens[index]}=[${row.map(format).join(', ')}]`).join('；')}` }),
+      el('p', { className: 'formula', text: 'Context = Σ_i · (α_i × V_i)' }),
+      el('p', { text: `逐项加权（词元顺序：${tokens.join('、')}）` }),
+      weightedTerms,
       el('p', { text: `上下文向量：[ ${output.context.map(format).join(', ')} ]` }),
       el('p', { className: 'input-help', text: 'Attention 权重描述的是这一次加权求和；它本身不能完整解释模型行为，更不等同于因果解释。' })
     ]);

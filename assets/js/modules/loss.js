@@ -38,7 +38,7 @@
     const chart = svg('svg', { class: 'loss-chart', viewBox: `0 0 ${width} ${height}`, role: 'img', 'aria-label': `${title}，横轴为迭代次数，纵轴为 ${yLabel}` }, [
       svg('line', { x1: path.padding.left, y1: 16, x2: path.padding.left, y2: height - path.padding.bottom, class: 'chart-axis' }),
       svg('line', { x1: path.padding.left, y1: height - path.padding.bottom, x2: width - path.padding.right, y2: height - path.padding.bottom, class: 'chart-axis' }),
-      svg('text', { x: path.padding.left, y: 12, class: 'chart-label' }, [document.createTextNode(`${yLabel} 0–${format(domainY, 2)}`)]),
+      svg('text', { x: path.padding.left, y: 12, class: 'chart-label' }, [document.createTextNode(yLabel)]),
       svg('text', { x: width - 68, y: height - 7, class: 'chart-label' }, [document.createTextNode('迭代次数')]),
       svg('path', { d: path.d, class: 'chart-line', stroke: color })
     ]);
@@ -82,17 +82,61 @@
     ]), el('p', { className: 'chart-key', text: '灰色：L(w) = w² · 蓝色：实际更新路径' })]);
   };
   const compareChart = () => {
-    const runs = [{ label: '缓慢 0.05', lr: .05, color: '#9ba4b1' }, { label: '稳定 0.35', lr: .35, color: '#6e8ef7' }, { label: '震荡 1.0', lr: 1, color: '#a675bc' }, { label: '发散 1.2', lr: 1.2, color: '#b85a5f' }];
+    const runs = [
+      { label: '缓慢下降', lr: .05, color: '#8d98a8' },
+      { label: '快速收敛', lr: .35, color: '#6487f5' },
+      { label: '等幅震荡', lr: 1, color: '#a66fc0' },
+      { label: '持续发散', lr: 1.2, color: '#bd5b61' }
+    ];
     const histories = runs.map((run) => ({ ...run, history: math.runQuadraticOptimization(run.lr, 12) }));
-    const points = histories.flatMap((run) => run.history.map((point) => ({ x: point.iteration, y: Math.min(point.loss, 24) })));
-    const width = 640, height = 220, maxY = Math.max(1, ...points.map((point) => point.y));
-    const base = pointPath(points, width, height, maxY, 0, 12);
-    const chart = svg('svg', { class: 'loss-chart', viewBox: `0 0 ${width} ${height}`, role: 'img', 'aria-label': '不同学习率对应不同的二次损失轨迹' }, [
-      svg('line', { x1: base.padding.left, y1: 16, x2: base.padding.left, y2: height - base.padding.bottom, class: 'chart-axis' }),
-      svg('line', { x1: base.padding.left, y1: height - base.padding.bottom, x2: width - base.padding.right, y2: height - base.padding.bottom, class: 'chart-axis' }),
-      ...histories.map((run) => svg('path', { d: pointPath(run.history.map((point) => ({ x: point.iteration, y: Math.min(point.loss, 24) })), width, height, maxY, 0, 12).d, class: 'chart-line', stroke: run.color }))
+    const width = 640, height = 250, maxY = 24;
+    const base = pointPath([{ x:0, y:0 }, { x:12, y:maxY }], width, height, maxY, 0, 12);
+    const yTicks = [0, 6, 12, 18, 24];
+    const xTicks = [0, 3, 6, 9, 12];
+    const chartChildren = [
+      ...yTicks.flatMap((value) => [
+        svg('line', { x1:base.padding.left, y1:base.sy(value), x2:width - base.padding.right, y2:base.sy(value), class:'chart-grid' }),
+        svg('text', { x:base.padding.left - 8, y:base.sy(value) + 4, class:'chart-tick', 'text-anchor':'end' }, [document.createTextNode(String(value))])
+      ]),
+      ...xTicks.flatMap((value) => [
+        svg('line', { x1:base.sx(value), y1:16, x2:base.sx(value), y2:height - base.padding.bottom, class:'chart-grid chart-grid--vertical' }),
+        svg('text', { x:base.sx(value), y:height - 10, class:'chart-tick', 'text-anchor':'middle' }, [document.createTextNode(String(value))])
+      ]),
+      svg('line', { x1:base.padding.left, y1:16, x2:base.padding.left, y2:height - base.padding.bottom, class:'chart-axis' }),
+      svg('line', { x1:base.padding.left, y1:height - base.padding.bottom, x2:width - base.padding.right, y2:height - base.padding.bottom, class:'chart-axis' }),
+      svg('text', { x:base.padding.left, y:11, class:'chart-axis-title' }, [document.createTextNode('损失 L(w)')]),
+      svg('text', { x:width - 3, y:height - 58, class:'chart-axis-title chart-axis-title--vertical' }, [document.createTextNode('迭代次数')]),
+      svg('text', { x:width - base.padding.right, y:27, class:'chart-cap-label', 'text-anchor':'end' }, [document.createTextNode('≥ 24 的数值在此截断')])
+    ];
+    histories.forEach((run) => {
+      const displayed = run.history.map((point) => ({ x:point.iteration, y:Math.min(point.loss, maxY) }));
+      chartChildren.push(svg('path', { d:pointPath(displayed, width, height, maxY, 0, 12).d, class:'chart-line compare-chart-line', stroke:run.color }));
+      const clippedIndex = run.history.findIndex((point) => point.loss >= maxY);
+      if (clippedIndex >= 0) {
+        const clipped = displayed.slice(clippedIndex);
+        chartChildren.push(svg('path', { d:pointPath(clipped, width, height, maxY, 0, 12).d, class:'chart-line compare-chart-line compare-chart-line--clipped', stroke:run.color }));
+      }
+      run.history.filter((point) => point.iteration % 3 === 0 || point.iteration === run.history.at(-1).iteration).forEach((point) => {
+        chartChildren.push(svg('circle', { cx:base.sx(point.iteration), cy:base.sy(Math.min(point.loss, maxY)), r:3.2, class:'chart-point compare-chart-point', fill:run.color }, [
+          svg('title', {}, [document.createTextNode(`η = ${run.lr} · 第 ${point.iteration} 步 · 损失 ${format(point.loss, point.loss >= 100 ? 1 : 3)}`)])
+        ]));
+      });
+    });
+    const chart = svg('svg', { class: 'loss-chart loss-chart--comparison', viewBox: `0 0 ${width} ${height}`, role: 'img', 'aria-label': '不同学习率对应的二次损失轨迹，包含纵轴损失和横轴迭代次数的刻度' }, chartChildren);
+    const legend = el('ul', { className:'loss-chart-legend', 'aria-label':'学习率曲线图例' }, histories.map((run) => {
+      const finalLoss = run.history.at(-1).loss;
+      const result = finalLoss >= maxY ? `L₁₂ = ${format(finalLoss, 1)}` : finalLoss < .001 ? 'L₁₂ < 0.001' : `L₁₂ = ${format(finalLoss)}`;
+      return el('li', { style:`--series-color:${run.color}` }, [
+        el('i', { 'aria-hidden':'true' }),
+        el('span', {}, [el('strong', { text:`η = ${run.lr}` }), el('small', { text:run.label })]),
+        el('em', { text:result })
+      ]);
+    }));
+    return el('div', { className: 'chart-wrap chart-wrap--comparison' }, [
+      chart,
+      legend,
+      el('p', { className: 'input-help comparison-chart-note', text: '四条曲线都从 w = 2、L(w) = 4 开始，使用相同的 L(w) = w² 更新规则独立运行 12 步。' })
     ]);
-    return el('div', { className: 'chart-wrap' }, [chart, el('p', { className: 'chart-key', text: runs.map((run) => run.label).join('  ·  ') }), el('p', { className: 'input-help', text: '比较结果来自同一 L(w)=w² 更新规则的独立运行；图中纵轴上限设为 24，仅用于让发散现象保持可读。' })]);
   };
 
   const state = { probability: .7, lr: .1, initialWeight: 0, initialBias: 0, weight: 0, bias: 0, iteration: 0, batch: 50, history: [], lastStep: null, timer: null, instability: false, quadLR: .35, quadWeight: 2, quadHistory: [] };
@@ -159,17 +203,25 @@
     bInput.addEventListener('change', () => { state.initialBias = Number(bInput.value) || 0; });
     const iterations = el('select', { 'aria-label': '训练迭代次数' }, [10, 50, 100, 200].map((value) => el('option', { value, text: `${value} 次迭代` })));
     iterations.value = String(state.batch); iterations.addEventListener('change', () => { state.batch = Number(iterations.value); });
-    const controls = el('div', { className: 'loss-controls' }, [
+    const controls = el('div', { className: 'loss-controls loss-controls--training' }, [
       el('label', { className: 'select-label', text: '学习率' }, lrInput),
       el('label', { className: 'select-label', text: '初始 w' }, wInput),
       el('label', { className: 'select-label', text: '初始 b' }, bInput),
       el('label', { className: 'select-label', text: '自动训练次数' }, iterations),
-      button('单步更新', 'tool-button tool-button--primary', () => { stopTraining(); logisticStep(); render(); }),
-      button('开始训练', 'tool-button tool-button--primary', () => { if (state.timer) return; let remaining = state.batch; state.timer = window.setInterval(() => { if (!logisticStep() || --remaining <= 0) stopTraining(); render(); }, 100); render(); }),
-      button('暂停', 'tool-button tool-button--quiet', () => { stopTraining(); render(); }),
-      button('重置', 'tool-button tool-button--quiet', () => { stopTraining(); initialiseLogistic(); render(); })
+      el('div', { className: 'loss-control-actions' }, [
+        button('单步更新', 'tool-button tool-button--primary', () => { stopTraining(); logisticStep(); render(); }),
+        button('开始训练', 'tool-button tool-button--primary', () => { if (state.timer) return; let remaining = state.batch; state.timer = window.setInterval(() => { if (!logisticStep() || --remaining <= 0) stopTraining(); render(); }, 100); render(); }),
+        button('暂停', 'tool-button tool-button--quiet', () => { stopTraining(); render(); }),
+        button('重置', 'tool-button tool-button--quiet', () => { stopTraining(); initialiseLogistic(); render(); })
+      ])
     ]);
     const current = state.lastStep;
+    const updateFormulas = current ? el('div', { className: 'loss-formula-stack' }, [
+      el('p', { className: 'formula', text:`dw = ${format(current.dw)}` }),
+      el('p', { className: 'formula', text:`db = ${format(current.db)}` }),
+      el('p', { className: 'formula', text:`w_next = ${format(current.oldWeight)} - ${format(state.lr)} × ${format(current.dw)} = ${format(current.nextWeight)}` }),
+      el('p', { className: 'formula', text:`b_next = ${format(current.oldBias)} - ${format(state.lr)} × ${format(current.db)} = ${format(current.nextBias)}` })
+    ]) : el('p', { className:'input-help', text:'点击“单步更新”可计算解析梯度，并执行一次参数更新。' });
     const optimizer = el('section', { className: 'loss-section' }, [
       el('p', { className: 'tool-label', text: '实验 B · 梯度下降模拟器' }),
       el('h3', { text: '逻辑回归 + 二元交叉熵' }), controls,
@@ -181,8 +233,12 @@
       ])),
       el('div', { className: 'step-summary' }, [
         el('p', { className: 'tool-label', text: '当前更新' }),
-        current ? el('p', { className: 'formula', text:`dw = ${format(current.dw)}；db = ${format(current.db)}；w = ${format(current.oldWeight)} − ${format(state.lr)} × ${format(current.dw)} = ${format(current.nextWeight)}；b = ${format(current.oldBias)} − ${format(state.lr)} × ${format(current.db)} = ${format(current.nextBias)}` }) : el('p', { className:'input-help', text:'点击“单步更新”可计算解析梯度，并执行一次参数更新。' }),
-        el('p', { className: 'input-help', text: '数据集使用 4 个抽象的一维“证据”值，而非真实文本词向量。梯度为批量均值：dw = mean((p−y)x)，db = mean(p−y)。' })
+        updateFormulas,
+        el('p', { className: 'input-help', text: '数据集使用 4 个抽象的一维“证据”值，而非真实文本词向量。梯度使用批量均值：' }),
+        el('div', { className: 'loss-formula-stack loss-formula-stack--compact' }, [
+          el('p', { className: 'formula', text: 'dw = mean((p - y) × x)' }),
+          el('p', { className: 'formula', text: 'db = mean(p - y)' })
+        ])
       ])
     ]);
 
@@ -200,7 +256,12 @@
       ]),
       el('div', { className: 'loss-metrics' }, [metric('w', format(state.quadWeight)), metric('损失', format(math.quadraticLoss(state.quadWeight))), metric('训练状态', quadStatus)]),
       landscape(state.quadHistory),
-      el('p', { className: 'formula', text: `L(w) = w²；∂L / ∂w = 2w；w_next = w − η × 2w；η = ${format(state.quadLR, 2)}` }),
+      el('div', { className: 'loss-formula-stack' }, [
+        el('p', { className: 'formula', text: 'L(w) = w²' }),
+        el('p', { className: 'formula', text: '∂L / ∂w = 2w' }),
+        el('p', { className: 'formula', text: 'w_next = w - η × 2w' }),
+        el('p', { className: 'formula', text: `η = ${format(state.quadLR, 2)}` })
+      ]),
       el('h4', { text: '比较不同学习率' }), compareChart(),
       el('p', { className: 'input-help', text: '训练状态是基于真实轨迹的规则型教学提示，并非严格的收敛证明。二次函数示例只用于隔离步长行为，不是 NLP 模型。' })
     ]);

@@ -85,7 +85,11 @@
     if (bleu.error) return [...body, h('p', { className:'metric-error', text:bleu.error })];
     const rouge1 = M.calculateRougeN(bleu.candidate, bleu.reference, 1), rouge2 = M.calculateRougeN(bleu.candidate, bleu.reference, 2), rougeL = M.calculateRougeL(bleu.candidate, bleu.reference);
     const trace = (part) => h('details', { className:'metric-trace', open:'open' }, [h('summary', { text:`BLEU-${part.n} · 截断精确率 ${fixed(part.precision)}` }), h('p', { text:`生成文本 N-gram：${part.candidateNgrams.join(' | ') || '—'}` }), h('p', { text:`参考文本 N-gram：${part.referenceNgrams.join(' | ') || '—'}` }), h('div', { className:'ngram-scroll' }, [h('table', { className:'ngram-table' }, [h('thead', {}, h('tr', {}, ['N-gram','生成次数','参考最大次数','截断计数'].map((text) => h('th', { text })))), h('tbody', {}, part.trace.map((row) => h('tr', {}, [h('td', { text:row.item }), h('td', { text:String(row.candidateCount) }), h('td', { text:String(row.referenceCount) }), h('td', { text:String(row.clippedCount) })])))])])]);
-    body.push(h('section', { className:'calculation-panel' }, [h('p', { className:'tool-label', text:'分步计算' }), h('h3', { text:'BLEU' }), h('p', { text:`词元 · 生成文本 (${bleu.c}) = ${bleu.candidate.join(' · ')} / 参考文本 (${bleu.r}) = ${bleu.reference.join(' · ')}` }), trace(bleu.parts[0]), trace(bleu.parts[1]), h('p', { className:'formula', text:`BP = ${bleu.c > bleu.r ? '1' : `exp(1 − ${bleu.r} / ${bleu.c})`} = ${fixed(bleu.bp)}` }), h('div', { className:'formula-grid' }, [metricCard('BLEU-1', bleu.bleu1, `BP × clipped_P_1 = ${fixed(bleu.bleu1)}`, '一元词重叠，采用截断计数。'), metricCard('BLEU-2', bleu.bleu2, 'BP × exp((log(P_1) + log(P_2)) / 2)', '一元词与二元词的几何平均。')])]), h('section', { className:'calculation-panel' }, [h('p', { className:'tool-label', text:'以召回为导向的重叠' }), h('h3', { text:'ROUGE' }), h('div', { className:'formula-grid' }, [metricCard('ROUGE-1', rouge1.f1, `P = ${pct(rouge1.precision)}；R = ${pct(rouge1.recall)}`, '一元词重叠的 F1。'), metricCard('ROUGE-2', rouge2.f1, `P = ${pct(rouge2.precision)}；R = ${pct(rouge2.recall)}`, '二元词重叠的 F1。'), metricCard('ROUGE-L', rougeL.f1, `LCS_length = ${rougeL.length}`, '最长公共子序列的 F1。')]), h('p', { text:`LCS：${rougeL.sequence.join(' · ') || '没有公共子序列'} · 长度 ${rougeL.length}` })]));
+    const tokenSummary = h('div', { className:'metric-token-summary' }, [
+      h('p', { text:`生成文本 (${bleu.c}) = ${bleu.candidate.join(' · ')}` }),
+      h('p', { text:`参考文本 (${bleu.r}) = ${bleu.reference.join(' · ')}` })
+    ]);
+    body.push(h('section', { className:'calculation-panel' }, [h('p', { className:'tool-label', text:'分步计算' }), h('h3', { text:'BLEU' }), tokenSummary, trace(bleu.parts[0]), trace(bleu.parts[1]), h('p', { className:'formula', text:`BP = ${bleu.c > bleu.r ? '1' : `exp(1 − ${bleu.r} / ${bleu.c})`} = ${fixed(bleu.bp)}` }), h('div', { className:'formula-grid' }, [metricCard('BLEU-1', bleu.bleu1, `BP × clipped_P_1 = ${fixed(bleu.bleu1)}`, '一元词重叠，采用截断计数。'), metricCard('BLEU-2', bleu.bleu2, 'BP × exp((log(P_1) + log(P_2)) / 2)', '一元词与二元词的几何平均。')])]), h('section', { className:'calculation-panel' }, [h('p', { className:'tool-label', text:'以召回为导向的重叠' }), h('h3', { text:'ROUGE' }), h('div', { className:'formula-grid' }, [metricCard('ROUGE-1', rouge1.f1, `P = ${pct(rouge1.precision)}；R = ${pct(rouge1.recall)}`, '一元词重叠的 F1。'), metricCard('ROUGE-2', rouge2.f1, `P = ${pct(rouge2.precision)}；R = ${pct(rouge2.recall)}`, '二元词重叠的 F1。'), metricCard('ROUGE-L', rougeL.f1, `LCS_length = ${rougeL.length}`, '最长公共子序列的 F1。')]), h('p', { className:'rouge-lcs-summary', text:`LCS：${rougeL.sequence.join(' · ') || '没有公共子序列'} · 长度 ${rougeL.length}` })]));
     return body;
   };
 
@@ -95,11 +99,20 @@
     const probabilities = parseList(state.probabilities).map(Number), result = M.calculatePerplexity(probabilities);
     const panel = h('section', { className:'metric-input-panel' }, [h('p', { className:'tool-label', text:'语言模型' }), h('h3', { text:'词元概率（Token Probability）' }), h('label', { className:'metric-textarea', text:'概率 · 以逗号或空格分隔' }, [input]), button('计算 PPL', 'tool-button tool-button--primary', render), h('div', { className:'example-list' }, Object.values(presets.language).map((item) => button(item.label, 'tool-button tool-button--quiet', () => { state.probabilities = item.probabilities; save(); render(); }))), h('p', { className:'input-help', text:'本页不运行语言模型。请提供每个真实 Token 被模型赋予的概率，且必须满足 0 < p ≤ 1。' })]);
     if (result.error) return [panel, h('p', { className:'metric-error', text:result.error })];
-    return [panel, h('section', { className:'calculation-panel' }, [h('p', { className:'tool-label', text:'分步计算' }), h('h3', { text:'困惑度（Perplexity / PPL）' }), h('p', { text:`p(xᵢ)：${probabilities.map((value) => value.toFixed(4)).join(', ')}` }), h('p', { text:`log p(xᵢ)：${result.logs.map((value) => value.toFixed(4)).join(', ')}` }), h('p', { className:'formula', text:`NLL_mean = ${fixed(result.averageNll)}` }), h('p', { className:'formula', text:`PPL = exp(${fixed(result.averageNll)}) = ${fixed(result.ppl)}` }), metricCard('困惑度（PPL）', result.ppl, 'PPL = exp((−1 / N) × Σ log(p(xᵢ)))', '越低通常表示模型对该序列越有把握。')]), h('section', { className:'insight-panel' }, [h('p', { className:'tool-label', text:'结果解读' }), h('p', { text:'PPL 只能在相同分词规则（Tokenization）、词表与数据分布条件下谨慎比较；它不是跨系统的通用可读性评分。' })])];
+    const probabilityTable = h('div', { className:'metric-matrix-wrap ppl-table-wrap' }, [h('table', { className:'ngram-table ppl-table' }, [
+      h('thead', {}, h('tr', {}, ['词元位置','p(xᵢ)','log p(xᵢ)','−log p(xᵢ)'].map((text) => h('th', { text })))),
+      h('tbody', {}, probabilities.map((probability, index) => h('tr', {}, [
+        h('th', { text:`第 ${index + 1} 个词元` }),
+        h('td', { text:probability.toFixed(4) }),
+        h('td', { text:result.logs[index].toFixed(4) }),
+        h('td', { text:(-result.logs[index]).toFixed(4) })
+      ])))
+    ])]);
+    return [panel, h('section', { className:'calculation-panel' }, [h('p', { className:'tool-label', text:'分步计算' }), h('h3', { text:'困惑度（Perplexity / PPL）' }), probabilityTable, h('p', { className:'formula', text:`NLL_mean = ${fixed(result.averageNll)}` }), h('p', { className:'formula', text:`PPL = exp(${fixed(result.averageNll)}) = ${fixed(result.ppl)}` }), metricCard('困惑度（PPL）', result.ppl, 'PPL = exp((−1 / N) × Σ log(p(xᵢ)))', '越低通常表示模型对该序列越有把握。')]), h('section', { className:'insight-panel' }, [h('p', { className:'tool-label', text:'结果解读' }), h('p', { text:'PPL 只能在相同分词规则（Tokenization）、词表与数据分布条件下谨慎比较；它不是跨系统的通用可读性评分。' })])];
   };
 
   const render = () => {
-    shell.className = 'experiment-shell experiment-shell--tool'; shell.replaceChildren();
+    shell.className = 'experiment-shell experiment-shell--tool metrics-lab'; shell.replaceChildren();
     const tabs = h('div', { className:'metric-tabs', role:'tablist', 'aria-label':'指标分类' }, [tabButton('classification','分类指标'), tabButton('generation','生成指标'), tabButton('language','语言模型')]);
     const content = state.tab === 'classification' ? classification() : state.tab === 'generation' ? generation() : language();
     shell.append(tabs, ...content.filter(Boolean));

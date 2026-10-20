@@ -34,17 +34,15 @@
 .beam-distribution + .beam-distribution { margin-top:.7rem; }
 .beam-distribution h3 { margin:0; color:#45525f; font-size:.86rem; }
 .beam-token-list { display:grid; gap:.35rem; margin-top:.7rem; }
-.beam-probability-bar { position:relative; overflow:hidden; border:1px solid var(--line); padding:.38rem .5rem; color:#4c5965; background:#fff; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.7rem; line-height:1.5; }
-.beam-probability-bar::before { position:absolute; z-index:0; inset:0 auto 0 0; width:var(--probability); background:#e9edff; content:""; }
-.beam-probability-bar { isolation:isolate; }
-.beam-probability-bar::after { position:absolute; z-index:-1; inset:0; background:transparent; content:""; }
-.beam-probability-bar { color:#41505e; }
-.beam-probability-bar::first-line { position:relative; }
+.beam-probability-bar { display:grid; grid-template-columns:var(--probability) minmax(0,1fr); min-height:2rem; overflow:hidden; border:1px solid var(--line); color:#41505e; background:#fff; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.7rem; line-height:1.5; }
+.beam-probability-fill { display:block; min-width:0; background:#e9edff; }
+.beam-probability-label { display:flex; align-items:center; min-width:0; padding:.38rem .5rem; overflow-wrap:anywhere; }
 .beam-grid { display:grid; gap:1rem; }
 .beam-grid--ranking { grid-template-columns:minmax(0,1.75fr) minmax(15rem,.75fr); }
 .beam-grid--final,.beam-grid--compare { grid-template-columns:repeat(2,minmax(0,1fr)); }
 .beam-score-inspector { border:1px solid var(--line); padding:1rem; background:#fbfcfe; }
 .beam-score-inspector p { color:#56626e; line-height:1.6; }
+.beam-score-inspector .beam-parent-sequence { margin:.65rem 0; color:var(--muted); font:500 .82rem/1.65 var(--sans); }
 .beam-prune-line td { border-top:2px solid #9fa8b3; border-bottom:1px solid #9fa8b3; padding:.45rem; color:#707b86; background:#f5f6f7; font-size:.67rem; font-weight:800; letter-spacing:.055em; text-align:center; }
 .beam-candidate-row.is-pruned { color:#8a929a; background:#fafafa; }
 .beam-candidate-row.is-pruned td { color:#89919a; }
@@ -74,6 +72,8 @@
 .beam-final-list li.is-best { color:var(--accent-deep); }
 .beam-final-list span { color:#687581; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.7rem; }
 .beam-best-result h3 { margin:.4rem 0 .7rem; color:#334250; font-size:1rem; line-height:1.5; }
+.beam-final-scores { display:grid; gap:.35rem; margin:.85rem 0 1rem; }
+.beam-final-scores .formula { margin:0; overflow-wrap:anywhere; }
 .beam-decoder-compare { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.7rem; }
 .beam-decoder-compare > div { border:1px solid var(--line); padding:.8rem; background:#fcfcfd; }
 .beam-decoder-compare h3 { margin:0 0 .85rem; font-size:.74rem; letter-spacing:.05em; }

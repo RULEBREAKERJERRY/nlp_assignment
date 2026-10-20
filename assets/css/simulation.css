@@ -1,3 +1,27 @@
 .sim-panel { margin-top:1.5rem; padding:1.1rem; border:1px solid var(--line); background:#fff; }.sim-panel h3 { margin:.35rem 0 1rem; font-size:1.25rem; }.sim-panel textarea { width:100%; padding:.7rem; border:1px solid var(--line-dark); border-radius:2px; font:400 .9rem/1.5 var(--sans); resize:vertical; }.sim-scroll { max-width:100%; overflow-x:auto; }.sim-matrix,.heatmap { width:100%; min-width:34rem; border-collapse:collapse; margin-top:.8rem; }.sim-matrix th,.sim-matrix td,.heatmap th,.heatmap td { padding:.48rem .6rem; border:1px solid var(--line); font:400 .76rem ui-monospace,SFMono-Regular,Menlo,monospace; text-align:center; white-space:nowrap; }.sim-matrix th,.heatmap th { background:#f5f7fa; font-weight:750; }.sim-matrix tr.is-active td,.sim-matrix tr.is-active th { background:#edf2ff; }.kernel-editor { display:grid; grid-template-columns:repeat(4,4rem); gap:.35rem; margin:.6rem 0; }.kernel-editor input { width:100%; min-height:2rem; padding:.25rem; border:1px solid var(--line-dark); font:.76rem ui-monospace,monospace; }.probability-list { display:grid; grid-template-columns:repeat(3,1fr); gap:.5rem; }.probability-list p { margin:.4rem 0; padding:.65rem; background:#f5f7fa; font-size:.8rem; }.attention-bars { display:grid; gap:.35rem; margin-top:.8rem; }.attention-bar { padding:.55rem; border:1px solid var(--line); background:linear-gradient(90deg,rgba(110,142,247,.18) var(--weight,0%),#fff var(--weight,0%)); color:var(--ink); cursor:pointer; font:.78rem var(--sans); text-align:left; }.attention-bar.is-masked,.heatmap td.is-masked { background:#eef0f3 !important; color:#737b86; text-decoration:line-through; }.heatmap td { background:rgba(110,142,247,calc(var(--weight) * .72)); }.heatmap td.is-masked { font:700 .68rem var(--sans); text-decoration:none; }.sim-panel .formula { overflow:auto; }.sim-panel .metric-input { max-width:10rem; margin-top:.7rem; }
-@media (max-width:640px) { .kernel-editor { grid-template-columns:repeat(4,1fr); }.probability-list { grid-template-columns:1fr; }.sim-matrix,.heatmap { min-width:30rem; } }
+
+/* Text-CNN keeps explanatory copy consistent with the scientific UI. */
+.text-cnn-lab .tool-label { font-family:var(--sans); font-size:.68rem; font-style:normal; letter-spacing:.09em; }
+.text-cnn-lab .sim-panel > .tool-label:first-child { margin:0 0 .85rem; }
+.text-cnn-lab .sim-panel > p:not(.tool-label):not(.formula):not(.input-help) { margin:.65rem 0 0; color:var(--muted); font-family:var(--sans); font-size:.84rem; font-style:normal; font-weight:500; line-height:1.65; }
+.text-cnn-lab .sim-panel > .tool-label:first-child + p:not(.formula) { margin-top:0; }
+.cnn-convolution-panel > select { box-sizing:border-box; width:100%; max-width:20rem; min-height:2.5rem; padding:.5rem .65rem; border:1px solid var(--line-dark); border-radius:2px; background:#fff; color:var(--ink); font:600 .8rem var(--sans); }
+.cnn-filter-help { max-width:44rem; line-height:1.65; }
+.cnn-convolution-panel .sim-scroll + .formula { margin-top:1.5rem; }
+.cnn-convolution-panel > .tool-label:not(:first-child) { margin:1.5rem 0 .85rem; }
+.cnn-classification-panel > .tool-label + .formula { margin-top:0; }
+.cnn-classification-panel > .formula + .formula { margin-top:1rem; }
+
+/* Attention follows the same typography and formula rhythm as Text-CNN. */
+.attention-lab .tool-label { font-family:var(--sans); font-size:.68rem; font-style:normal; letter-spacing:.09em; }
+.attention-lab .sim-panel > .tool-label:first-child { margin:0 0 .85rem; }
+.attention-lab .sim-panel > p:not(.tool-label):not(.formula):not(.input-help) { margin:.65rem 0 0; color:var(--muted); font-family:var(--sans); font-size:.84rem; font-style:normal; font-weight:500; line-height:1.65; }
+.attention-lab .sim-panel > .tool-label:first-child + p:not(.formula) { margin-top:0; }
+.attention-lab .formula + .formula { margin-top:.85rem; }
+.attention-score-panel .attention-bars + .attention-weight-sum { margin-top:1.35rem; }
+.attention-value-terms { display:grid; gap:.5rem; margin:1rem 0; }
+.attention-value-term { display:grid; grid-template-columns:minmax(8rem,auto) minmax(0,1fr); gap:.75rem; align-items:center; padding:.55rem .65rem; border:1px solid var(--line); background:#f7f8fa; }
+.attention-value-term .formula { margin:0; }
+.attention-value-term code { overflow-wrap:anywhere; color:#485463; font:.76rem/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+@media (max-width:640px) { .kernel-editor { grid-template-columns:repeat(4,1fr); }.probability-list,.attention-value-term { grid-template-columns:1fr; }.sim-matrix,.heatmap { min-width:30rem; } }
 .attention-bar:focus-visible,.kernel-editor input:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }.projection-details { margin-top:.9rem; }.projection-details summary { cursor:pointer; font-size:.76rem; font-weight:700; letter-spacing:.08em; }.projection-details pre { overflow-x:auto; padding:.75rem; background:#f5f7fa; border:1px solid var(--line); font:.72rem/1.55 ui-monospace,SFMono-Regular,Menlo,monospace; }

@@ -116,7 +116,7 @@
     if (state.step === 0) visual = [matrixPanel('TOKENS', tokens.map((_, index) => [index]), tokens, '将文本转为小写、移除标点并按空白切分后得到的词元索引。')];
     else if (state.step === 1) visual = [matrixPanel('Embedding', result.embedding, tokens, '确定性的教学词向量。', { heatmap: true })];
     else if (state.step === 2) visual = [matrixPanel('Position', result.position, tokens, '正弦位置编码：PE(pos,2i)=sin，PE(pos,2i+1)=cos。', { heatmap: true }), matrixPanel('Input', result.input, tokens, '词向量 + 位置编码（关闭位置编码时仅使用词向量）。', { heatmap: true })];
-    else if (state.step === 3) visual = [matrixPanel('Q', result.q, tokens, 'Q = XWQ.'), matrixPanel('K', result.k, tokens, 'K = XWK.'), matrixPanel('V', result.v, tokens, 'V = XWV.')];
+    else if (state.step === 3) visual = [matrixPanel('Q', result.q, tokens, 'Q = XWQ'), matrixPanel('K', result.k, tokens, 'K = XWK'), matrixPanel('V', result.v, tokens, 'V = XWV')];
     else if (state.step === 4) visual = [el('div', { className: 'head-selector' }, [el('label', { className: 'select-label', text: '选择 Attention 头' }, headSelect)]), matrixPanel(`Q Head ${state.head + 1}`, result.qHeads[state.head], tokens, `从 Q 拆分得到；形状为 ${shapeText(result.qHeads[state.head])}。`), matrixPanel(`K Head ${state.head + 1}`, result.kHeads[state.head], tokens, '对应的 Key 通道。'), matrixPanel(`V Head ${state.head + 1}`, result.vHeads[state.head], tokens, '对应的 Value 通道。')];
     else if (state.step === 5) visual = [el('div', { className: 'head-selector' }, [el('label', { className: 'select-label', text: '选择 Attention 头' }, headSelect)]), matrixPanel('Scores', head.rawScores, tokens, `QKᵀ / √dₖ。形状为 ${shapeText(result.qHeads[state.head])} × ${shapeText(math.transpose(result.kHeads[state.head]))}。`, { columnLabels: tokens }), matrixPanel('Masked scores', head.maskedScores, tokens, '遮罩会在按行计算 Softmax 之前加入。', { mask: true, columnLabels: tokens })];
     else if (state.step === 6) visual = [el('div', { className: 'head-selector' }, [el('label', { className: 'select-label', text: '选择 Attention 头' }, headSelect)]), matrixPanel(`Attention Head ${state.head + 1}`, head.weights, tokens, '按行计算的 Softmax 权重；每一可见行的和为 1。', { mask: state.causal, maskPattern: head.mask, heatmap: true, columnLabels: tokens }), matrixPanel('Head output', head.output, tokens, 'Attention 权重 × V。', { heatmap: true })];
@@ -124,9 +124,12 @@
     else if (state.step === 8) visual = [matrixPanel('Residual 1', result.residual1, tokens, '输入 + 投影后的多头注意力。'), matrixPanel('Norm 1', result.norm1, tokens, '对每个词元特征向量进行 LayerNorm，γ=1、β=0。', { heatmap: true })];
     else if (state.step === 9) visual = [matrixPanel('FFN hidden', result.ffnHidden, tokens, 'Norm1 × W1 + b1，随后经过 ReLU。'), matrixPanel('FFN output', result.ffnOutput, tokens, 'ReLU 隐藏层 × W2 + b2。'), matrixPanel('Residual 2', result.residual2, tokens, 'Norm1 + FFN 输出。')];
     else visual = [matrixPanel('Block output', result.output, tokens, '第二次 LayerNorm 的输出：每个词元的上下文化表示。', { heatmap: true }), matrixPanel('Input', result.input, tokens, '更新前：词向量 + 位置编码。'), matrixPanel('Norm 2 / output', result.output, tokens, '更新后：Transformer 模块输出。', { heatmap: true })];
+    const formulaLines = state.step === 9
+      ? ['h = ReLU(x × W_1 + b_1)', 'FFN(x) = h × W_2 + b_2']
+      : [state.step < 3 ? 'X = Embedding + Positional_Encoding' : state.step < 7 ? 'Attention(Q,K,V) = softmax((QKᵀ / √dₖ) + mask) × V' : state.step < 9 ? 'Norm_1 = LayerNorm(X + MultiHead(X))' : 'Output = LayerNorm(Norm_1 + FFN(Norm_1))'];
     const formula = el('aside', { className: 'transformer-formula' }, [
       el('p', { className: 'tool-label', text: '公式 / 单元格查看器' }),
-      el('p', { className: 'formula', text: state.step < 3 ? 'X = Embedding + Positional_Encoding' : state.step < 7 ? 'Attention(Q,K,V) = softmax((QKᵀ / √dₖ) + mask) × V' : state.step < 9 ? 'Norm_1 = LayerNorm(X + MultiHead(X))' : state.step === 9 ? 'FFN(x) = ReLU(xW_1 + b_1)W_2 + b_2' : 'Output = LayerNorm(Norm_1 + FFN(Norm_1))' }),
+      ...formulaLines.map((text) => el('p', { className: 'formula', text })),
       currentDetail(result, tokens),
       el('p', { className: 'input-help', text: state.causal ? '因果模式会在 Softmax 前遮住未来的 Key；被遮罩的单元格会明确标记。' : '双向模式允许每一组 Query / Key 相互可见。' })
     ]);

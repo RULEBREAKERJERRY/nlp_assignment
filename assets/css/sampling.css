@@ -1,3 +1,103 @@
 .sampling-lab { display:grid; gap:1.5rem; }.sampling-controls,.sampling-distribution,.sampling-output,.sampling-compare,.sampling-explanation { padding:1.25rem; border:1px solid var(--line); background:#fff; }.sampling-controls textarea { width:100%; margin:.8rem 0; padding:.7rem; border:1px solid var(--line-dark); border-radius:2px; font:400 .9rem/1.5 var(--sans); resize:vertical; }.sampling-options,.comparison-controls { display:flex; flex-wrap:wrap; gap:.75rem; margin-top:1rem; }.sampling-options input,.sampling-options select,.comparison-controls select { box-sizing:border-box; width:8rem; min-height:2.4rem; padding:.4rem .55rem; border:1px solid var(--line-dark); border-radius:2px; background:#fff; color:var(--ink); font:600 .78rem var(--sans); }.sampling-flow { display:flex; gap:.35rem; overflow-x:auto; margin:1rem 0; padding-bottom:.35rem; }.sampling-flow span { flex:0 0 auto; padding:.42rem .55rem; border:1px solid var(--line); color:var(--muted); font-size:.65rem; font-weight:750; letter-spacing:.04em; }.sampling-flow span.is-active { border-color:var(--accent); background:#edf2ff; color:var(--accent-deep); }.sampling-current { display:grid; grid-template-columns:minmax(0,1.8fr) minmax(15rem,.8fr); gap:1rem; }.sampling-metrics { display:grid; grid-template-columns:repeat(4,1fr); margin:.9rem 0; border:1px solid var(--line); }.sampling-metrics > div { min-width:0; padding:.75rem; border-right:1px solid var(--line); }.sampling-metrics > div:last-child { border-right:0; }.sampling-metrics span { display:block; color:var(--muted); font-size:.63rem; font-weight:750; letter-spacing:.07em; }.sampling-metrics strong { display:block; overflow-wrap:anywhere; margin-top:.2rem; font-family:var(--display); font-size:1.15rem; }.sampling-table-wrap { max-width:100%; overflow-x:auto; margin-top:1rem; }.sampling-table { width:100%; min-width:50rem; border-collapse:collapse; }.sampling-table th,.sampling-table td { padding:.43rem .52rem; border:1px solid var(--line); font:.72rem ui-monospace,SFMono-Regular,Menlo,monospace; text-align:center; white-space:nowrap; }.sampling-table th { background:#f4f6f9; font-weight:750; }.sampling-table tr.is-filtered { color:#7c8490; text-decoration:line-through; }.sampling-table tr.is-selected th,.sampling-table tr.is-selected td { background:#eef2ff; color:var(--accent-deep); text-decoration:none; }.probability-bar { display:inline-block; width:max(2px,var(--probability)); height:.55rem; background:var(--accent); vertical-align:middle; }.sampling-explanation { border-left:3px solid var(--accent); background:#f5f7ff; }.sampling-explanation .formula { overflow-wrap:anywhere; font-size:.83rem; }.generated-sequence { min-height:4rem; margin:1rem 0; padding:1rem; border:1px solid var(--line); background:#f8f9fb; font-family:var(--display); font-size:1.15rem; line-height:1.7; }.generation-actions { display:flex; flex-wrap:wrap; gap:.55rem; }.sampling-history { min-width:35rem; }.strategy-grid { display:grid; grid-template-columns:1fr 1fr; gap:1px; margin-top:1rem; border:1px solid var(--line); background:var(--line); }.strategy-card { padding:1rem; background:#fff; }.strategy-card p { margin:.4rem 0; font-size:.82rem; }.strategy-output { min-height:4rem; padding:.75rem; background:#f7f8fa; font-family:var(--display); font-size:.98rem !important; line-height:1.55; }
 @media (max-width:780px) { .sampling-current { grid-template-columns:1fr; }.sampling-metrics { grid-template-columns:repeat(2,1fr); }.sampling-metrics > div:nth-child(2) { border-right:0; }.sampling-metrics > div:nth-child(-n+2) { border-bottom:1px solid var(--line); } }
 @media (max-width:520px) { .sampling-controls,.sampling-distribution,.sampling-output,.sampling-compare,.sampling-explanation { padding:1rem; }.sampling-current { gap:0; }.sampling-options,.comparison-controls,.generation-actions { align-items:stretch; flex-direction:column; }.sampling-options > *,.comparison-controls > *,.generation-actions > * { width:100%; }.sampling-options input,.sampling-options select,.comparison-controls select { width:100%; }.sampling-lab .tool-navigation { flex-direction:column; }.sampling-lab .tool-navigation > * { width:100%; }.strategy-grid { grid-template-columns:1fr; } }
+
+/* Module 09 alignment and stage-detail rhythm. */
+.sampling-lab,
+.sampling-lab > *,
+.sampling-current,
+.sampling-current > * {
+  box-sizing:border-box;
+  width:100%;
+  min-width:0;
+}
+
+.sampling-current {
+  align-items:stretch;
+}
+
+.sampling-options {
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  align-items:end;
+}
+
+.sampling-options > .select-label {
+  display:grid;
+  grid-template-rows:auto 2.75rem;
+  gap:.4rem;
+  min-width:0;
+}
+
+.sampling-options input,
+.sampling-options select {
+  width:100%;
+  height:2.75rem;
+  min-height:2.75rem;
+  padding:.5rem .65rem;
+  border:1px solid var(--line-dark);
+  border-radius:2px;
+  background-color:#fff;
+  color:var(--ink);
+  font:600 .82rem/1.2 var(--sans);
+}
+
+.sampling-options select {
+  -webkit-appearance:none;
+  appearance:none;
+  padding-right:2rem;
+  background-image:linear-gradient(45deg,transparent 50%,#59636f 50%),linear-gradient(135deg,#59636f 50%,transparent 50%);
+  background-position:calc(100% - .9rem) 50%,calc(100% - .62rem) 50%;
+  background-repeat:no-repeat;
+  background-size:.3rem .3rem,.3rem .3rem;
+}
+
+.sampling-explanation {
+  height:100%;
+}
+
+.sampling-formula-stack {
+  display:grid;
+  gap:.35rem;
+}
+
+.sampling-formula-stack .formula {
+  margin:0;
+}
+
+.sampling-random-ranges {
+  margin-top:.75rem;
+}
+
+.sampling-explanation > .tool-label + .sampling-random-ranges {
+  margin-top:0;
+}
+
+.sampling-random-ranges > .input-help {
+  margin:0 0 .45rem;
+}
+
+.sampling-random-range-list {
+  display:grid;
+  gap:.25rem;
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+
+.sampling-random-range-list li {
+  color:var(--muted);
+  font:500 .8rem/1.55 var(--sans);
+}
+
+@media (max-width:960px) {
+  .sampling-options { grid-template-columns:repeat(3,minmax(0,1fr)); }
+}
+
+@media (max-width:640px) {
+  .sampling-options { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+
+@media (max-width:520px) {
+  .sampling-options { grid-template-columns:1fr; }
+}

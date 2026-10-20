@@ -41,12 +41,12 @@
     const windowTokens = tokens.slice(position, position + filter.kernel.length);
     const isFullWindow = windowMatrix.length === filter.kernel.length;
 
-    shell.className = 'experiment-shell experiment-shell--tool';
+    shell.className = 'experiment-shell experiment-shell--tool text-cnn-lab';
     shell.replaceChildren();
     const input = el('textarea', { rows: '3', value: state.text, 'aria-label': 'Text-CNN 输入文本' });
     input.addEventListener('input', () => { state.text = input.value; });
     const filterSelect = el('select', { 'aria-label': '当前卷积核' });
-    state.filters.forEach((item, index) => filterSelect.append(el('option', { value: index, text: `${item.name} · 窗口 ${item.kernel.length}` })));
+    state.filters.forEach((item, index) => filterSelect.append(el('option', { value: index, text: `${item.name} · ${item.kernel.length}-gram 窗口` })));
     filterSelect.value = String(state.filter);
     filterSelect.addEventListener('change', () => { state.filter = Number(filterSelect.value); state.position = 0; render(); });
 
@@ -60,7 +60,7 @@
       el('p', { className: 'input-help', text: '本实验使用英文教学词表。未知词、中文和 emoji 会稳定映射为 <UNK>；为便于观察，最多显示前 10 个词元。' })
     ]);
 
-    const embeddingPanel = el('section', { className: 'sim-panel' }, [
+    const embeddingPanel = el('section', { className: 'sim-panel cnn-embedding-panel' }, [
       el('p', { className: 'tool-label', text: '01 词元 / 02 词向量' }),
       el('p', { text: `词元：${tokens.map((token) => `[ ${token} ]`).join(' ')}` }),
       matrix(tokens, embedding, Array.from({ length: Math.min(filter.kernel.length, tokens.length) }, (_, index) => position + index))
@@ -74,8 +74,9 @@
     }));
     const bias = el('input', { type: 'number', step: '.05', value: String(filter.bias), 'aria-label': '卷积偏置' });
     bias.addEventListener('change', () => { state.filters[state.filter].bias = Number(bias.value) || 0; render(); });
-    const convolutionPanel = el('section', { className: 'sim-panel' }, [
+    const convolutionPanel = el('section', { className: 'sim-panel cnn-convolution-panel' }, [
       el('p', { className: 'tool-label', text: '03 卷积 / 04 激活' }), filterSelect,
+      el('p', { className: 'input-help cnn-filter-help', text: '卷积核 A 与 B 都使用 2-gram 窗口，但权重不同；卷积核 C 使用 3-gram 窗口。' }),
       el('p', { text: `窗口 ${position + 1}：[${windowTokens.join(', ')}]` }),
       matrix(windowTokens, windowMatrix),
       el('p', { className: 'formula', text: isFullWindow ? `z = Σ(X ⊙ W) + b = ${format(filter.raw[position] - filter.bias)} + ${format(filter.bias)} = ${format(filter.raw[position])}` : 'z = Σ(X ⊙ W) + b（需要完整窗口）' }),
@@ -92,18 +93,21 @@
     ]);
 
     const best = result.probabilities.indexOf(Math.max(...result.probabilities));
-    const outputPanel = el('section', { className: 'sim-panel' }, [
+    const featurePanel = el('section', { className: 'sim-panel cnn-feature-panel' }, [
       el('p', { className: 'tool-label', text: '05 特征图 / 06 池化' }),
       el('p', { text: `特征图：[ ${filter.activations.map(format).join(', ')} ]` }),
-      el('p', { text: `最大池化：${format(filter.pool.value)}，位于窗口 ${filter.pool.index + 1} [${tokens.slice(filter.pool.index, filter.pool.index + filter.kernel.length).join(', ')}]` }),
+      el('p', { text: `最大池化：${format(filter.pool.value)}，位于窗口 ${filter.pool.index + 1} [${tokens.slice(filter.pool.index, filter.pool.index + filter.kernel.length).join(', ')}]` })
+    ]);
+    const classificationPanel = el('section', { className: 'sim-panel cnn-classification-panel' }, [
       el('p', { className: 'tool-label', text: '07 分类' }),
-      el('p', { className: 'formula', text: 'logits = W_c × pooled_features + b_c；p = softmax(logits)' }),
+      el('p', { className: 'formula', text: 'logits = W_c × pooled_features + b_c' }),
+      el('p', { className: 'formula', text: 'p = softmax(logits)' }),
       el('p', { text: `特征向量：[ ${result.features.map(format).join(', ')} ]` }),
       el('p', { text: `Logits：[ ${result.logits.map(format).join(', ')} ]` }),
       el('div', { className: 'probability-list' }, result.probabilities.map((value, index) => el('p', { text: `${data.classifier.labels[index]} · ${(value * 100).toFixed(1)}%` }))),
       el('p', { className: 'input-help', text: `预测类别：${data.classifier.labels[best]}。卷积核与分类器权重均为固定教学参数，不代表真实情感模型训练得到的权重。` })
     ]);
-    shell.append(inputPanel, embeddingPanel, convolutionPanel, outputPanel);
+    shell.append(inputPanel, embeddingPanel, convolutionPanel, featurePanel, classificationPanel);
   };
   render();
 })();
