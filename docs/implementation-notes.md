@@ -1,21 +1,21 @@
 # NLP 百宝箱｜实现记录
 
-本文按当前页面而非开发时间线组织。项目共 13 个模块，入口在 [首页](../index.html)，使用 HTML5、CSS3 与原生 JavaScript。小词表、固定矩阵及教学分布用于解释机制，不代表训练好的生产模型。课程报告与测试证据另见 [实验报告](../NLP百宝箱_实验报告.md)。
+本文按当前页面而非开发时间线组织。项目共 13 个模块，入口在 [首页](../index.html)，使用 HTML5、CSS3 与原生 JavaScript。小词表、固定矩阵及教学分布用于解释机制，不代表训练好的生产模型。
 
 ## 共用页面与文件层次
 
 | 层 | 文件 | 职责 |
 | --- | --- | --- |
-| 页面 | `index.html`、`pages/*.html` | 首页五区入口、13 个模块页；03～13 有相邻路标，01、02 当前只有返回入口。 |
+| 页面 | `index.html`、`pages/*.html` | 首页五区入口、13 个模块页 |
 | 全局样式 | `assets/css/main.css`、`responsive.css` | 深色 Hero、品牌、导航、内容宽度、断点。 |
 | 实验样式 | `assets/css/experiment.css`、模块 CSS | 共享实验容器与各模块的表格、矩阵、轨迹、图形。 |
 | 导航脚本 | `assets/js/main.js` | 移动菜单和首页导航状态。 |
 | 教学数据 | `assets/js/data/*.js` | 术语、自测题库及模块预设。 |
 | 模块与算法 | `assets/js/modules/*.js` | DOM 交互；可独立验证的纯计算文件使用 `*-algorithms.js`。 |
 
-外层借鉴 [Massively](https://html5up.net/massively) 的 Intro Hero、品牌 Header、横向导航、Featured 内容、文章式卡片和浅色中央容器；内层保持细边框、低阴影的科学实验界面。没有直接复制模板的演示图片或文案。首页与模块页 Footer 均保留 `Design adapted from Massively by HTML5 UP.`，对应 [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) 许可。当前仓库不包含独立的 `html5up-massively/` 源码目录，运行页也未依赖其演示脚本。
+外层借鉴 [Massively](https://html5up.net/massively) 的 Intro Hero、品牌 Header、横向导航、Featured 内容、文章式卡片和浅色中央容器；内层保持细边框、低阴影的科学实验界面。没有直接复制模板的演示图片或文案。首页与模块页 Footer 均保留 `Design adapted from Massively by HTML5 UP.`，对应 [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) 许可。
 
-每页将模块内容置于 `.experiment-shell[data-experiment]`，并复用公共实验样式。13 页都有“返回模块列表”；03～13 使用 `.module-links` 相邻路标，01、02 目前没有该导航。首页实际锚点是 `#foundations`、`#simulation`、`#engineering`、`#extensions` 和 `#decision-intelligence`。各模块脚本在浏览器本地执行，不需要服务端或外部模型 API。
+每页将模块内容置于 `.experiment-shell[data-experiment]`，并复用公共实验样式。首页实际锚点是 `#foundations`、`#simulation`、`#engineering`、`#extensions` 和 `#decision-intelligence`。各模块脚本在浏览器本地执行，不需要服务端或外部模型 API。
 
 ## 入门夯实 01～04
 
@@ -67,7 +67,6 @@
 
 ## 验证、待补证据与维护原则
 
-- 2026-10-20 的源码级检查覆盖首页和 13 个模块页的本地链接与资源目标、34 个 JS 文件的 `node --check`。固定数值样例见报告；这些结果**不能替代**浏览器交互、Console 或视觉回归。
+- 源码级检查覆盖首页和 13 个模块页的本地链接与资源目标、34 个 JS 文件的 `node --check`。固定数值样例见报告；这些结果**不能替代**浏览器交互、Console 或视觉回归。
 - CSS 中可找到桌面到平板 / 手机的断点及局部滚动容器，但尚需在实际 1920、1440、1366、平板与手机视口核查，尤其是矩阵、搜索树和 13 的构建器。
-- 首页 05～09 的卡片与中阶介绍仍有“预留”阶段措辞，和模块页已实现的状态不一致；01、02 缺少与 03 一致的相邻模块路标。这些是本轮源码审阅发现的文案与导航遗留项，本次仅更新文档，未改动冻结的前端。
 - 后续如果扩展模块，继续将题库 / 预设、纯计算与 DOM 渲染分离；不要把教学简化写成工业级模型能力，也不要把新功能描述为已测功能。

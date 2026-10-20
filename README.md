@@ -4,7 +4,7 @@
 
 ## 运行与目录
 
-在现代浏览器中打开 [index.html](index.html)；也可以将项目根目录作为静态站点提供。页面资源使用相对路径，无需安装前端框架或数据库。完整实现边界见 [实现记录](docs/implementation-notes.md)，课程作业文稿见 [实验报告](docs/NLP百宝箱实验报告.md)。
+在现代浏览器中打开 [index.html](index.html)；也可以将项目根目录作为静态站点提供。页面资源使用相对路径，无需安装前端框架或数据库。完整实现边界见 [实现记录](docs/implementation-notes.md)。
 
 | 路径 | 作用 |
 | --- | --- |
