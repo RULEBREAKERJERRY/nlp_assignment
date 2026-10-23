@@ -42,6 +42,8 @@
 .bpe-merge-display .bpe-symbol { font-size:1rem; padding:.38rem .58rem; }
 .bpe-operator,.bpe-arrow { color:var(--accent-deep); font-size:1.1rem; font-weight:800; }
 .bpe-best-count { margin:.2rem 0; color:var(--accent-deep); font-size:.72rem; font-weight:800; letter-spacing:.08em; }
+.bpe-formula-stack { display:grid; gap:.4rem; margin:.8rem 0 1rem; }
+.bpe-formula-stack .formula { margin:0; overflow-wrap:anywhere; }
 .bpe-pair { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
 .bpe-pair-button { border:0; padding:0; color:inherit; background:transparent; font:inherit; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; cursor:pointer; text-align:left; }
 .bpe-pair-button:hover,.bpe-pair-button[aria-pressed="true"] { color:var(--accent-deep); text-decoration:underline; text-underline-offset:.16rem; }

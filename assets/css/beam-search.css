@@ -86,6 +86,8 @@
 .beam-width-list strong { color:#45525f; font-weight:650; }
 .beam-width-list span { margin-top:.12rem; color:#687581; font-size:.72rem; }
 .beam-notes { color:#53616d; line-height:1.65; }
+.beam-notes > p:not(.tool-label) { margin:1rem 0 0; color:var(--muted); font-family:var(--sans); font-size:.84rem; font-style:normal; font-weight:500; line-height:1.65; }
+.beam-notes > p.input-help { margin-top:.75rem; }
 .beam-notes > p:last-child { margin-bottom:0; }
 .beam-flow { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; margin:.8rem 0; border:1px solid var(--line); background:var(--line); }
 .beam-flow span { display:grid; min-height:2.5rem; place-items:center; padding:.35rem; color:#6d7781; background:#fafbfc; font-size:.65rem; font-weight:800; letter-spacing:.05em; text-align:center; }
